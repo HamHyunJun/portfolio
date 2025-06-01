@@ -1,73 +1,83 @@
 <template>
-    <div class="header">
+    <div class="header" id="header">
         <div class="header-contents">
             <h1 class="header-title">Portfolio</h1>
             <div class="header-menu">
-                <button class="header-menu-item">Home</button>
-                <button class="header-menu-item">About</button>
-                <button class="header-menu-item">Skill</button>
-                <button class="header-menu-item">Works</button>
-                <button class="header-menu-item">Contact</button>
+                <button
+                    v-for="(menu, index) in menus"
+                    :key="index"
+                    class="header-menu-item"
+                    @click="scrollToSection(menu.targetId)"
+                >
+                    {{ menu.name }}
+                </button>
             </div>
-            <div
-                class="active-bar"
-                :style="{
-                    left: `${activeBarInfo?.left}px`,
-                    width: `${activeBarInfo?.width}px`,
-                }"
-            ></div>
+
+            <UIDropdown hide-chevron placement="bottom">
+                <template #button>
+                    <i class="header-setting | icon icon-person"></i>
+                </template>
+                <template #dropdown>
+                    <el-dropdown-menu class="header-setting-dropdown-menu">
+                        <el-dropdown-item class="header-setting-dropdown-item">
+                            <i class="icon icon-login"></i>
+                            로그인
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </UIDropdown>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    const route = useRoute()
-
-    const menuEls = ref<HTMLDivElement[]>()
     const menus = computed(() => [
         {
-            name: "menu.partners.lnb.ai.studio",
-            href: "/ai/studio",
-            hide: false,
-            active: route.path === "/ai/studio",
+            name: "Home",
+            targetId: "main-home",
         },
         {
-            name: "menu.partners.lnb.ai.make",
-            href: "/ai/make",
-            hide: false,
-            active: ["/ai/make", "/ai/voice", "/ai/file", "/ai/youtube"].includes(route.path),
+            name: "About",
+            targetId: "main-about",
         },
         {
-            name: "menu.partners.lnb.ai.studio.library",
-            href: "/ai/library",
-            hide: false,
-            active: route.path.startsWith("/ai/library"),
+            name: "Works",
+            targetId: "main-works",
         },
         {
-            name: "menu.partners.lnb.ai.studio.project",
-            href: "/ai/project",
-            hide: false,
-            active: route.path === "/ai/project",
+            name: "Skill",
+            targetId: "main-skill",
         },
         {
-            name: "menu.partners.lnb.ai.studio.guide",
-            href: "/ai/guide",
-            hide: false,
-            active: route.path.startsWith("/ai/guide"),
+            name: "Contact",
+            targetId: "main-contact",
         },
     ])
 
-    const activeBarInfo = computed<{ left: number; width: number }>(() => {
-        const index = menus.value.findIndex(({ active }) => active)
-        const activeMenuEl = menuEls.value?.[index]
-        if (activeMenuEl == null) return { left: 0, width: 0 }
-        return { left: activeMenuEl.offsetLeft, width: activeMenuEl.offsetWidth }
-    })
+    const scrollToSection = (id: string): void => {
+        const header = document.getElementById("header")
+        const headerHeight = header?.getBoundingClientRect().height ?? 0
+        const target = document.getElementById(id)
+
+        if (target) {
+            const elementTop = target.getBoundingClientRect().top
+            const offsetPosition = window.scrollY + elementTop - headerHeight
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth",
+            })
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
     .header {
-        background: #dbe2ef;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: var(--blue-dim);
 
         .header-contents {
             width: 100%;
@@ -76,8 +86,7 @@
             margin: 0 auto;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            color: #112d4e;
+            color: var(--primary);
 
             .header-title {
                 font-size: 32px;
@@ -87,26 +96,31 @@
             .header-menu {
                 height: auto;
                 display: flex;
+                justify-content: right;
                 gap: 10px;
                 font-size: 18px;
                 font-weight: bold;
+                flex: 1;
 
                 .header-menu-item {
                     padding: 0 16px;
                 }
             }
 
-            .active-bar {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-
-                width: 100%;
-                height: 2px;
-                background: red;
-
-                transition: left 300ms cubic-bezier(0.17, 0.67, 0.29, 1);
+            .header-setting {
+                margin-left: 20px;
+                color: var(--primary);
             }
+        }
+    }
+</style>
+<style lang="scss">
+    .header-setting-dropdown-menu {
+        background: white !important;
+
+        .header-setting-dropdown-item {
+            justify-content: center;
+            color: var(--primary);
         }
     }
 </style>

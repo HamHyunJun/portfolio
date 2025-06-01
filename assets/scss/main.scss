@@ -1,5 +1,23 @@
 @use "normalize";
+@use "icons.scss";
+
+:root {
+    --primary: #112d4e;
+    --white: #F9F7F7;
+    --blue: #3F72AF;
+    --blue-dim: #DBE2EF;
+
+    --rounded: 10px;
+    --rounded-xs: 6px;
+    --rounded-sm: 8px;
+    --rounded-lg: 12px;
+    --rounded-xl: 14px;
+}
 
 body {
-    margin: 0;
+    color: var(--primary);
+}
+
+.text-accent {
+    color: var(--blue);
 }

@@ -1,0 +1,34 @@
+@mixin generateIcon($src) {
+    -webkit-mask-image: url($src);
+    mask-image: url($src);
+}
+
+.icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    background-color: currentColor;
+}
+
+.icon-person {
+    @include generateIcon("~/assets/images/icons/icon_person.svg");
+}
+.icon-login {
+    @include generateIcon("~/assets/images/icons/icon_login.svg");
+}
+.icon-logout {
+    @include generateIcon("~/assets/images/icons/icon_logout.svg");
+}
+.icon-education {
+    @include generateIcon("~/assets/images/icons/icon_education.svg");
+}
+.icon-awards {
+    @include generateIcon("~/assets/images/icons/icon_awards.svg");
+}
+.icon-work {
+    @include generateIcon("~/assets/images/icons/icon_work.svg");
+}
