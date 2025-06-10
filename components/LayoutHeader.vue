@@ -78,6 +78,7 @@
         top: 0;
         left: 0;
         background: var(--blue-dim);
+        z-index: 10;
 
         .header-contents {
             width: 100%;

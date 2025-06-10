@@ -6,8 +6,12 @@
         <section class="section color" id="main-about">
             <MainAbout :about-data="aboutData" />
         </section>
-        <section class="section" id="main-works">Works section</section>
-        <section class="section" id="main-skill">Skill section</section>
+        <section class="section" id="main-works">
+            <MainWorks />
+        </section>
+        <section class="section" id="main-skill">
+            <MainSkill />
+        </section>
         <section class="section" id="main-contact">Contact section</section>
     </main>
 </template>
