@@ -1,5 +1,6 @@
 <template>
     <div class="about">
+        <MainSectionTitle title="ABOUT ME" />
         <div class="about-contents">
             <div class="contents-title-container">
                 <i class="icon icon-education"></i>
@@ -62,23 +63,21 @@
 <style lang="scss" scoped>
     .about {
         width: 100%;
-        max-width: 1200px;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
 
         .about-contents {
-            padding: 18px;
+            padding: 18px 18px 18px 36px;
             display: flex;
             gap: 60px;
 
             .contents-title-container {
                 width: 200px;
                 height: 70px;
-                padding: 16px;
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 gap: 18px;
                 border-radius: var(--rounded);
                 background: var(--blue-dim);
@@ -90,7 +89,6 @@
             }
 
             .contents-desc-container {
-                padding: 8px;
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
@@ -101,7 +99,6 @@
                     gap: 16px;
 
                     .contents-desc {
-                        padding: 8px;
                         border-radius: var(--rounded);
                         background: var(--blue-dim);
                         font-size: 13px;

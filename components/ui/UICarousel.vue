@@ -15,7 +15,6 @@
     }>()
 
     const emblaRef = ref<HTMLElement>()
-    const selectedIndex = ref<number>(0)
 
     let embla: ReturnType<typeof EmblaCarousel>
 
@@ -41,12 +40,10 @@
     })
 
     const updateSelectedIndex = (): void => {
-        const index = embla?.selectedScrollSnap() ?? 0
-        selectedIndex.value = index
-        emit("change", index)
+        emit("change", embla?.selectedScrollSnap() ?? 0)
     }
 
-    provide("selectedIndex", selectedIndex)
+    onBeforeUnmount(() => embla?.destroy())
 </script>
 
 <style lang="scss" scoped>

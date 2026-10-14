@@ -1,10 +1,3 @@
-export interface MainHomeData {
-    title: string
-    desc: string
-    tags: string[]
-    details: string[]
-}
-
 export interface MainAboutData {
     education: AboutData[]
     awards: AboutData[]
@@ -14,4 +7,17 @@ export interface MainAboutData {
 export interface AboutData {
     date: string
     detail: string
+}
+
+export interface MainSkillData {
+    category: "Languages" | "Frameworks & Libraries" | "Tools"
+    data: MainSkillDataDetail[]
+}
+
+export interface MainSkillDataDetail {
+    name: string
+    desc: string
+    logoText: string
+    logoColor: string
+    logoBackground: string
 }

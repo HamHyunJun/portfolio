@@ -14,15 +14,6 @@
     background-color: currentColor;
 }
 
-.icon-person {
-    @include generateIcon("~/assets/images/icons/icon_person.svg");
-}
-.icon-login {
-    @include generateIcon("~/assets/images/icons/icon_login.svg");
-}
-.icon-logout {
-    @include generateIcon("~/assets/images/icons/icon_logout.svg");
-}
 .icon-education {
     @include generateIcon("~/assets/images/icons/icon_education.svg");
 }
@@ -31,4 +22,16 @@
 }
 .icon-work {
     @include generateIcon("~/assets/images/icons/icon_work.svg");
+}
+.icon-plus {
+    @include generateIcon("~/assets/images/icons/icon_plus.svg");
+}
+.icon-code {
+    @include generateIcon("~/assets/images/icons/icon_code.svg");
+}
+.icon-books {
+    @include generateIcon("~/assets/images/icons/icon_books.svg");
+}
+.icon-tool {
+    @include generateIcon("~/assets/images/icons/icon_tool.svg");
 }

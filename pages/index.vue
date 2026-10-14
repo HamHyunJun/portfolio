@@ -1,39 +1,51 @@
 <template>
     <main class="main-page">
-        <section class="section" id="main-home">
-            <MainHome :home-data="homeData" />
+        <section class="section main-board">
+            <div class="board-title">
+                <h1 data-aos="fade-right" class="board-title-top">HAM</h1>
+                <h1 data-aos="fade-left" class="board-title-bottom">HYUN JUN</h1>
+            </div>
         </section>
-        <section class="section color" id="main-about">
-            <MainAbout :about-data="aboutData" />
-        </section>
-        <section class="section" id="main-works">
-            <MainWorks />
-        </section>
-        <section class="section" id="main-skill">
-            <MainSkill />
-        </section>
-        <section class="section" id="main-contact">Contact section</section>
+        <div class="main-contents">
+            <MainAside
+                class="main-aside"
+                :active-section="activeSection"
+                @select="scrollToSection"
+            />
+            <div class="main-content-wrap">
+                <section ref="aboutRef" class="section main-about">
+                    <MainAbout :about-data="aboutData" />
+                </section>
+                <section ref="skillRef" class="section main-skill">
+                    <MainSkill :skill-data="skillData" />
+                </section>
+                <section ref="worksRef" class="section main-works">
+                    <MainWorks />
+                </section>
+            </div>
+        </div>
     </main>
 </template>
 
 <script setup lang="ts">
-    import type { MainAboutData, MainHomeData } from "~/structure/user"
+    import type { MainAboutData, MainSkillData } from "~/structure/user"
+    import AOS from "aos"
+    import "aos/dist/aos.css"
 
     definePageMeta({
         layout: "default",
     })
 
-    const homeData = computed<MainHomeData>(() => ({
-        title: "Front-End Developer",
-        desc: "<span class='text-accent'>열정</span>은 기본, 모든 것은 <span class='text-accent'>결과</span>로 보여드립니다.",
-        tags: ["프론트", "개발자", "차별화", "집요함", "성장"],
-        details: [
-            "꾸준한 노력과 성장을 갈망하고 있습니다.",
-            "올바른 목적과 방향으로 나아가고자 노력하고 있습니다.",
-            "맡은 일에 항상 최선을 다하고 책임감 있게 해결해 나갑니다.",
-            "노력, 열정, 차별화 모든 것은 결과로 보여드리겠습니다.",
-        ],
-    }))
+    let lenis: any
+    let lenisRafId = 0
+    let sectionObserver: IntersectionObserver | null = null
+
+    type SectionKey = "about" | "skill" | "works"
+
+    const activeSection = ref<SectionKey | null>(null)
+    const aboutRef = ref<HTMLElement | null>(null)
+    const skillRef = ref<HTMLElement | null>(null)
+    const worksRef = ref<HTMLElement | null>(null)
 
     const aboutData = computed<MainAboutData>(() => ({
         education: [
@@ -58,15 +70,250 @@
             { date: "2020. 12. ~ 2022. 03.", detail: "중외정보기술 S&P 사업팀 근무" },
         ],
     }))
+
+    const skillData = computed<MainSkillData[]>(() => [
+        {
+            category: "Languages",
+            data: [
+                {
+                    name: "TypeScript",
+                    desc: "타입 기반으로 안정적인 컴포넌트와 API 인터페이스를 설계하고 개발했습니다.",
+                    logoText: "TS",
+                    logoColor: "#002AB5",
+                    logoBackground: "#97ABEF",
+                },
+                {
+                    name: "JavaScript",
+                    desc: "ES6+ 문법을 활용하여 동적인 UI와 비즈니스 로직을 구현했습니다.",
+                    logoText: "JS",
+                    logoColor: "#4A3F00",
+                    logoBackground: "#C5AD1C",
+                },
+                {
+                    name: "HTML5",
+                    desc: "시맨틱 마크업을 기반으로 접근성과 SEO를 고려한 화면을 구성했습니다.",
+                    logoText: "HT",
+                    logoColor: "#850000",
+                    logoBackground: "#F39393",
+                },
+                {
+                    name: "CSS3",
+                    desc: "반응형 레이아웃과 다양한 애니메이션 및 스타일을 구현했습니다.",
+                    logoText: "CS",
+                    logoColor: "#002AB5",
+                    logoBackground: "#97ABEF",
+                },
+            ],
+        },
+        {
+            category: "Frameworks & Libraries",
+            data: [
+                {
+                    name: "Vue.js",
+                    desc: "Composition API를 활용하여 재사용 가능한 컴포넌트를 설계하고 개발했습니다.",
+                    logoText: "VU",
+                    logoColor: "#1D4900",
+                    logoBackground: "#69C32D",
+                },
+                {
+                    name: "Nuxt.js",
+                    desc: "SSR 및 파일 기반 라우팅을 활용한 웹 서비스를 개발하고 SEO를 최적화했습니다.",
+                    logoText: "NX",
+                    logoColor: "#1D4900",
+                    logoBackground: "#69C32D",
+                },
+                {
+                    name: "Pinia",
+                    desc: "전역 상태를 관리하고 컴포넌트 간 데이터 흐름을 효율적으로 구성했습니다.",
+                    logoText: "PI",
+                    logoColor: "#4A3F00",
+                    logoBackground: "#C5AD1C",
+                },
+                {
+                    name: "Tailwind CSS",
+                    desc: "Utility-First 방식으로 반응형 UI를 빠르게 구현했습니다.",
+                    logoText: "TW",
+                    logoColor: "#073B8B",
+                    logoBackground: "#94AFD9",
+                },
+                {
+                    name: "SCSS",
+                    desc: "변수, 믹스인, 중첩 문법을 활용하여 유지보수가 쉬운 스타일을 작성했습니다.",
+                    logoText: "SC",
+                    logoColor: "#850000",
+                    logoBackground: "#F39393",
+                },
+                {
+                    name: "ECharts",
+                    desc: "데이터를 시각화하는 차트와 대시보드를 구현했습니다.",
+                    logoText: "EC",
+                    logoColor: "#7F0048",
+                    logoBackground: "#F28DC6",
+                },
+            ],
+        },
+        {
+            category: "Tools",
+            data: [
+                {
+                    name: "GitHub",
+                    desc: "Git Flow 기반으로 버전 관리 및 협업을 진행했습니다.",
+                    logoText: "GH",
+                    logoColor: "#663005",
+                    logoBackground: "#D2A480",
+                },
+                {
+                    name: "Figma",
+                    desc: "디자이너와 협업하며 디자인 시안을 기반으로 화면을 구현했습니다.",
+                    logoText: "FG",
+                    logoColor: "#730673",
+                    logoBackground: "#DB96DB",
+                },
+                {
+                    name: "VS Code",
+                    desc: "주요 개발 환경으로 활용하며 확장 프로그램을 통해 개발 생산성을 높였습니다.",
+                    logoText: "VS",
+                    logoColor: "#002AB5",
+                    logoBackground: "#97ABEF",
+                },
+                {
+                    name: "Vite",
+                    desc: "빠른 개발 서버와 빌드 환경을 활용하여 프로젝트를 구성했습니다.",
+                    logoText: "VI",
+                    logoColor: "#0121C2",
+                    logoBackground: "#9FABE3",
+                },
+            ],
+        },
+    ])
+
+    const sectionRefs = {
+        about: aboutRef,
+        skill: skillRef,
+        works: worksRef,
+    } as const
+
+    const scrollToSection = (key: SectionKey): void => {
+        const target = sectionRefs[key].value
+        if (!target) return
+
+        if (lenis) {
+            lenis.scrollTo(target)
+        } else {
+            target.scrollIntoView({ behavior: "smooth" })
+        }
+    }
+
+    onBeforeUnmount(() => {
+        lenis?.destroy()
+        cancelAnimationFrame(lenisRafId)
+        sectionObserver?.disconnect()
+    })
+
+    onMounted(() => {
+        AOS.init()
+
+        ensureLenis().then(() => {
+            lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
+
+            const lenisRaf = (time: number): void => {
+                lenis.raf(time)
+                lenisRafId = requestAnimationFrame(lenisRaf)
+            }
+            lenisRafId = requestAnimationFrame(lenisRaf)
+        })
+
+        const sectionMap = new Map<Element, SectionKey>([
+            [aboutRef.value as Element, "about"],
+            [skillRef.value as Element, "skill"],
+            [worksRef.value as Element, "works"],
+        ])
+
+        sectionObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        activeSection.value = sectionMap.get(entry.target) ?? null
+                    }
+                })
+            },
+            { rootMargin: "-20% 0px -75% 0px" }
+        )
+
+        sectionMap.forEach((_key, el) => el && sectionObserver?.observe(el))
+    })
+
+    const ensureLenis = (): Promise<void> =>
+        new Promise<void>((resolve, reject) => {
+            if (window.Lenis) return resolve()
+
+            let script = document.querySelector<HTMLScriptElement>('script[src*="lenis.min.js"]')
+            if (!script) {
+                script = document.createElement("script")
+                script.src = "https://unpkg.com/lenis@1.3.8/dist/lenis.min.js"
+                script.async = true
+                document.head.appendChild(script)
+            }
+            script.addEventListener("load", () => resolve(), { once: true })
+            script.addEventListener("error", () => reject(new Error("Lenis load failed")), {
+                once: true,
+            })
+        })
 </script>
 
 <style lang="scss" scoped>
     .main-page {
         .section {
-            padding: 150px 0;
+            position: relative;
+            padding: 120px 60px;
+            background: var(--base-background);
 
-            &.color {
-                background: var(--white);
+            &.main-board {
+                height: 100vh;
+                margin: auto 0;
+                position: sticky;
+                top: 10px;
+
+                .board-title {
+                    height: 100%;
+                    font-size: 180px;
+                    font-weight: 700;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .board-title-top {
+                        text-align: left;
+                    }
+
+                    .board-title-bottom {
+                        text-align: right;
+                    }
+                }
+            }
+
+            &.main-about {
+                height: 100vh;
+            }
+        }
+
+        .main-contents {
+            display: flex;
+            position: relative;
+
+            .main-aside {
+                width: 250px;
+                height: 100vh;
+                flex-shrink: 0;
+                align-self: flex-start;
+                background: var(--base-background);
+                position: sticky;
+                top: 10px;
+            }
+
+            .main-content-wrap {
+                display: flex;
+                flex-direction: column;
             }
         }
     }

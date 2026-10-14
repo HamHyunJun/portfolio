@@ -1,5 +1,5 @@
 <template>
-    <div class="embla__slide" ref="selfRef">
+    <div class="embla__slide">
         <slot></slot>
     </div>
 </template>
