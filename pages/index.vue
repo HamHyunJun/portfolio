@@ -1,9 +1,33 @@
 <template>
     <main class="main-page">
         <section class="section main-board">
+            <div class="board-lines" aria-hidden="true">
+                <span
+                    v-for="(top, n) in [18, 36, 64, 82]"
+                    :key="top"
+                    :style="{ top: `${top}%`, '--n': n }"
+                ></span>
+            </div>
             <div class="board-title">
-                <h1 data-aos="fade-right" class="board-title-top">HAM</h1>
-                <h1 data-aos="fade-left" class="board-title-bottom">HYUN JUN</h1>
+                <h1 class="board-name" aria-label="HAM HYUN JUN">
+                    <span
+                        v-for="(line, row) in nameLines"
+                        :key="line"
+                        class="board-line"
+                        :class="row ? 'board-title-bottom' : 'board-title-top'"
+                        aria-hidden="true"
+                    >
+                        <span
+                            v-for="(char, i) in line"
+                            :key="i"
+                            class="board-char"
+                            :style="{ '--i': i + row * 4 }"
+                        >
+                            {{ char === " " ? "\u00A0" : char }}
+                        </span>
+                    </span>
+                </h1>
+                <p class="board-role">Front-End Developer</p>
             </div>
         </section>
         <div class="main-contents">
@@ -48,6 +72,8 @@
     let lenis: any
     let lenisRafId = 0
     let sectionObserver: IntersectionObserver | null = null
+
+    const nameLines = ["HAM", "HYUN JUN"]
 
     type SectionKey = "about" | "skill" | "works"
 
@@ -126,7 +152,7 @@
                 },
                 {
                     name: "Nuxt.js",
-                    desc: "SSR 및 파일 기반 라우팅을 활용한 웹 서비스를 개발하고 SEO를 최적화했습니다.",
+                    desc: "Nuxt 3·4의 SSR과 파일 기반 라우팅으로 웹 서비스를 개발하고 SEO를 최적화했습니다.",
                     logoText: "NX",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
@@ -151,6 +177,20 @@
                     logoText: "SC",
                     logoColor: "#850000",
                     logoBackground: "#F39393",
+                },
+                {
+                    name: "Supabase",
+                    desc: "DB와 백엔드를 Supabase로 구성해 Camping&Joy, MoaCook을 개발했습니다.",
+                    logoText: "SB",
+                    logoColor: "#1D4900",
+                    logoBackground: "#69C32D",
+                },
+                {
+                    name: "Capacitor",
+                    desc: "Nuxt 웹 서비스를 Android·iOS 앱으로 패키징해 배포했습니다.",
+                    logoText: "CP",
+                    logoColor: "#073B8B",
+                    logoBackground: "#94AFD9",
                 },
                 {
                     name: "ECharts",
@@ -179,11 +219,18 @@
                     logoBackground: "#DB96DB",
                 },
                 {
-                    name: "VS Code",
-                    desc: "주요 개발 환경으로 활용하며 확장 프로그램을 통해 개발 생산성을 높였습니다.",
-                    logoText: "VS",
-                    logoColor: "#002AB5",
-                    logoBackground: "#97ABEF",
+                    name: "Claude Code (LLM)",
+                    desc: "LLM 에이전트를 개발 워크플로에 활용하고, MCP 기반 도구(Inspector-Agent)를 직접 만들었습니다.",
+                    logoText: "AI",
+                    logoColor: "#730673",
+                    logoBackground: "#DB96DB",
+                },
+                {
+                    name: "Vercel",
+                    desc: "Nuxt 서비스를 Vercel에 배포하고 프리뷰·운영 환경을 관리했습니다.",
+                    logoText: "VC",
+                    logoColor: "#663005",
+                    logoBackground: "#D2A480",
                 },
                 {
                     name: "Vite",
@@ -271,6 +318,45 @@
 </script>
 
 <style lang="scss" scoped>
+    @keyframes char-rise {
+        from {
+            transform: translateY(105%);
+        }
+    }
+
+    @keyframes line-in {
+        from {
+            transform: translateX(calc(var(--dir, 1) * -100%));
+        }
+    }
+
+    @keyframes line-streak {
+        0%,
+        40% {
+            left: -20%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @keyframes role-fade {
+        from {
+            opacity: 0;
+            letter-spacing: 0.8em;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .board-char,
+        .board-role,
+        .board-lines span,
+        .board-lines span::after {
+            animation: none !important;
+        }
+    }
+
     .main-page {
         .section {
             position: relative;
@@ -283,7 +369,47 @@
                 position: sticky;
                 top: 10px;
 
+                // 얇은 가로선이 방향을 번갈아 가며 쭉 들어온 뒤, 빛줄기가 선을 따라 지나간다
+                .board-lines {
+                    position: absolute;
+                    inset: 0;
+                    overflow: hidden;
+                    pointer-events: none;
+
+                    span {
+                        position: absolute;
+                        left: 0;
+                        width: 100%;
+                        height: 1px;
+                        overflow: hidden;
+                        background: rgb(255 255 255 / 10%);
+                        animation: line-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+                        animation-delay: calc(var(--n) * 150ms);
+
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            top: 0;
+                            width: 18%;
+                            height: 100%;
+                            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 55%));
+                            animation: line-streak 7s ease-in-out infinite;
+                            animation-delay: calc(var(--n) * 1.4s + 1.8s);
+                            left: -20%;
+                        }
+
+                        &:nth-child(even) {
+                            --dir: -1;
+
+                            &::after {
+                                animation-direction: reverse;
+                            }
+                        }
+                    }
+                }
+
                 .board-title {
+                    position: relative;
                     height: 100%;
                     font-size: clamp(48px, 12vw, 180px);
                     font-weight: 700;
@@ -291,12 +417,38 @@
                     flex-direction: column;
                     justify-content: center;
 
+                    .board-name {
+                        font: inherit;
+                    }
+
+                    .board-line {
+                        display: block;
+                        overflow: hidden;
+                    }
+
                     .board-title-top {
                         text-align: left;
                     }
 
                     .board-title-bottom {
                         text-align: right;
+                    }
+
+                    // 글자가 아래에서 위로 한 글자씩 올라오는 진입 효과
+                    .board-char {
+                        display: inline-block;
+                        animation: char-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+                        animation-delay: calc(var(--i) * 70ms + 150ms);
+                    }
+
+                    .board-role {
+                        margin-top: 24px;
+                        font-size: clamp(14px, 1.6vw, 22px);
+                        font-weight: 400;
+                        letter-spacing: 0.4em;
+                        text-align: right;
+                        color: var(--primary);
+                        animation: role-fade 1s ease 1.1s both;
                     }
                 }
             }
