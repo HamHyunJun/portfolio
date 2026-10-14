@@ -20,7 +20,7 @@
 
         .title-divider {
             height: 2px;
-            width: 100%;
+            flex: 1;
             background: var(--gray);
         }
 

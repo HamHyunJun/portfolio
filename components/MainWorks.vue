@@ -226,6 +226,7 @@
                                 font-weight: 600;
                                 text-decoration: underline;
                                 text-underline-offset: 4px;
+                                padding-block: 2px;
 
                                 &:focus-visible {
                                     outline: 2px solid var(--white);
