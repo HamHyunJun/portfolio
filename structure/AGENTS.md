@@ -9,7 +9,7 @@
 ## Key Files
 | File | Description |
 |------|-------------|
-| `user.ts` | `MainAboutData`/`AboutData`, `MainSkillData`(category: Languages \| Frameworks & Libraries \| Tools)/`MainSkillDataDetail` |
+| `user.ts` | `MainAboutData`/`AboutData`, `MainWorkData`/`ContactLink`, `MainSkillData`(category: Languages \| Frameworks & Libraries \| Tools)/`MainSkillDataDetail` |
 
 ## For AI Agents
 

@@ -22,6 +22,9 @@
                 <section ref="worksRef" class="section main-works">
                     <MainWorks />
                 </section>
+                <section class="section main-contact">
+                    <MainContact />
+                </section>
             </div>
         </div>
     </main>
@@ -31,6 +34,12 @@
     import type { MainAboutData, MainSkillData } from "~/structure/user"
     import AOS from "aos"
     import "aos/dist/aos.css"
+
+    useHead({ htmlAttrs: { lang: "ko" } })
+    useSeoMeta({
+        title: "HAM HYUN JUN | Front-End Developer",
+        description: "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다.",
+    })
 
     definePageMeta({
         layout: "default",
@@ -276,7 +285,7 @@
 
                 .board-title {
                     height: 100%;
-                    font-size: 180px;
+                    font-size: clamp(48px, 12vw, 180px);
                     font-weight: 700;
                     display: flex;
                     flex-direction: column;
@@ -295,6 +304,10 @@
             &.main-about {
                 height: 100vh;
             }
+
+            &.main-contact:not(:has(*)) {
+                display: none;
+            }
         }
 
         .main-contents {
@@ -312,8 +325,42 @@
             }
 
             .main-content-wrap {
+                min-width: 0;
+                flex: 1;
                 display: flex;
                 flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 60px 20px;
+
+                &.main-board .board-title {
+                    font-size: clamp(48px, 18vw, 120px);
+                }
+
+                &.main-about {
+                    height: auto;
+                    min-height: 100vh;
+                }
+            }
+
+            .main-contents {
+                .main-aside {
+                    width: 100%;
+                    height: auto;
+                    position: fixed;
+                    top: auto;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 10;
+                }
+
+                .main-content-wrap {
+                    padding-bottom: 64px;
+                }
             }
         }
     }

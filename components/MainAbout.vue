@@ -73,6 +73,12 @@
             display: flex;
             gap: 60px;
 
+            @media (max-width: 768px) {
+                flex-direction: column;
+                gap: 20px;
+                padding: 0;
+            }
+
             .contents-title-container {
                 width: 200px;
                 height: 70px;

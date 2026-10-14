@@ -27,25 +27,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="flip-container">
-            <div v-for="(item, index) in skillData" :key="index" class="flip">
-                <div
-                    class="flip-inner"
-                    :class="flipped[index] ? 'flip-start' : 'flip-end'"
-                    @click="toggleFlip(index)"
-                >
-                    <p class="flip-front">
-                        {{ item.category }}
-                    </p>
-                    <div class="flip-back">
-                        <p v-for="(inner, index) in item.data" :key="index" class="back-inner">
-                            {{ inner.title }}
-                        </p>
-                    </div>
-                    <i class="icon icon-plus"></i>
-                </div>
-            </div>
-        </div> -->
     </div>
 </template>
 
@@ -102,6 +83,14 @@
                     grid-template-columns: repeat(4, 1fr);
                     column-gap: 10px;
                     row-gap: 15px;
+
+                    @media (max-width: 1024px) {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+
+                    @media (max-width: 480px) {
+                        grid-template-columns: 1fr;
+                    }
 
                     .content-detail-wrap {
                         padding: 20px;

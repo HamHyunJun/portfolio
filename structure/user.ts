@@ -21,3 +21,17 @@ export interface MainSkillDataDetail {
     logoColor: string
     logoBackground: string
 }
+
+export interface MainWorkData {
+    name: string
+    period: string
+    summary: string
+    stack: string[]
+    image?: string
+    links: ContactLink[]
+}
+
+export interface ContactLink {
+    label: string
+    href: string
+}
