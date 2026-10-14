@@ -45,6 +45,7 @@
             background: none;
             font-size: 50px;
             font-weight: 700;
+            line-height: 140%;
             color: #8a8a8a;
             cursor: pointer;
             transition:

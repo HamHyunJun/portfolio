@@ -13,6 +13,8 @@
                             v-if="work.image"
                             :src="work.image"
                             :alt="`${work.name} 화면`"
+                            loading="lazy"
+                            decoding="async"
                             class="slide-image"
                         />
                         <div class="slide-body">
@@ -20,23 +22,23 @@
                                 :id="`work-toggle-${index}`"
                                 type="button"
                                 class="slide-toggle"
-                                :aria-expanded="openIndex === index"
+                                :aria-expanded="isOpen"
                                 :aria-controls="`work-panel-${index}`"
-                                @click="toggle(index)"
+                                @click="isOpen = !isOpen"
                             >
                                 <span class="toggle-text">
                                     <span class="toggle-title">{{ work.name }}</span>
                                     <span class="toggle-period">{{ work.period }}</span>
                                 </span>
-                                <i class="icon icon-plus" :class="{ open: openIndex === index }"></i>
+                                <i class="icon icon-plus" :class="{ open: isOpen }"></i>
                             </button>
                             <div
                                 :id="`work-panel-${index}`"
                                 class="slide-panel"
-                                :class="{ open: openIndex === index }"
+                                :class="{ open: isOpen }"
                                 role="region"
                                 :aria-labelledby="`work-toggle-${index}`"
-                                :inert="openIndex !== index"
+                                :inert="!isOpen"
                             >
                                 <div class="panel-inner">
                                     <p class="panel-summary">{{ work.summary }}</p>
@@ -70,11 +72,8 @@
     import { works } from "~/data/works"
 
     const selectedIndex = ref<number>(0)
-    const openIndex = ref<number | null>(null)
-
-    const toggle = (index: number): void => {
-        openIndex.value = openIndex.value === index ? null : index
-    }
+    // 상세창 열림 상태는 카드 전체가 공유해, 넘겨도 열림/닫힘이 유지된다
+    const isOpen = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>
@@ -98,22 +97,25 @@
                         height: 100%;
                         background: var(--gray);
                         border-radius: var(--rounded);
-                        opacity: 0.5;
                         transform: scale(1);
-                        transition:
-                            opacity 0.4s ease,
-                            transform 0.4s ease;
+                        transition: transform 0.4s ease;
                         z-index: 0;
                         position: relative;
                         overflow: hidden;
 
                         &.active {
-                            opacity: 1;
                             transform: scale(1.05);
                             z-index: 1;
+
+                            .slide-image {
+                                opacity: 1;
+                            }
                         }
 
+                        // 텍스트 대비를 지키기 위해 비활성 카드는 이미지만 흐리게 처리
                         .slide-image {
+                            opacity: 0.5;
+                            transition: opacity 0.4s ease;
                             display: block;
                             width: 100%;
                             aspect-ratio: 16 / 9;
