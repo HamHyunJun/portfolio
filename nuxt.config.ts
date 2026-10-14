@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-11-01",
     devtools: { enabled: true },
+    devServer: {
+        port: 3004,
+    },
     components: [
         {
             path: "~/components", // will get any components nested in let's say /components/test too
@@ -9,5 +12,4 @@ export default defineNuxtConfig({
         },
     ],
     css: ["~/assets/scss/main.scss"],
-    modules: ["@element-plus/nuxt"],
 })
