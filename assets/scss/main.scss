@@ -1,0 +1,33 @@
+@use "normalize";
+@use "icons.scss";
+
+:root {
+    --primary: #B4B4B4;
+    --base-background: #141414;
+    --white: #DCDCDC;
+    --gray: #3C3C3C;
+
+    --rounded: 14px;
+    --rounded-2xs: 4px;
+    --rounded-xs: 8px;
+    --rounded-sm: 10px;
+    --rounded-lg: 20px;
+    --rounded-xl: 25px;
+    --rounded-full: 900px;
+}
+
+* > * {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+        Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    line-height: 140%;
+    color: inherit;
+    -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    color: var(--primary);
+    background: var(--base-background);
+}
