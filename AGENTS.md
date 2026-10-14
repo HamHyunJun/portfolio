@@ -22,6 +22,7 @@ Nuxt 3 기반 개인 포트폴리오 사이트(다크 테마, 단일 페이지: 
 | `layouts/` | Nuxt 레이아웃 (see `layouts/AGENTS.md`) |
 | `pages/` | 라우트 페이지 (see `pages/AGENTS.md`) |
 | `structure/` | 데이터 타입 정의 (see `structure/AGENTS.md`) |
+| `data/` | 사용자가 채우는 콘텐츠: `works.ts`(프로젝트), `contacts.ts`(연락 링크) |
 | `public/`, `server/` | 정적 파일(favicon, robots.txt) / tsconfig만 존재 |
 
 ## For AI Agents
