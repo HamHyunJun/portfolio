@@ -27,7 +27,8 @@ export interface MainWorkData {
     period: string
     summary: string
     stack: string[]
-    image?: string
+    webImage?: string
+    appImage?: string
     links: ContactLink[]
 }
 
