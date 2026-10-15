@@ -54,6 +54,9 @@
 
         .embla__container {
             display: flex;
+            // 마우스 드래그로 넘길 때 글자가 선택되지 않도록 한다
+            user-select: none;
+            -webkit-user-select: none;
         }
     }
 </style>
