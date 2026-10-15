@@ -1,37 +1,41 @@
 <template>
     <div class="skill">
         <MainSectionTitle title="SKILLS" no="02" />
-        <div
-            class="skill-contents"
-            @pointermove="trackGlow($event, '.content-detail-wrap')"
-        >
+        <div class="skill-contents">
             <div
-                v-for="(skill, index) in skillData"
-                :key="index"
+                v-for="skill in skillData"
+                :key="skill.category"
                 class="skill-content"
+                :style="{ '--tone': toneOf(skill.category) }"
                 data-aos="fade-up"
             >
                 <div class="content-category-wrap">
                     <i class="icon" :class="categoryIcon(skill.category)"></i>
                     <p class="category-title">{{ skill.category }}</p>
                 </div>
-                <div class="content-details">
-                    <div
-                        v-for="(detail, detailIndex) in skill.data"
-                        :key="detailIndex"
-                        class="content-detail-wrap"
+                <div class="chips" role="group" :aria-label="`${skill.category} 기술`">
+                    <button
+                        v-for="detail in skill.data"
+                        :key="detail.name"
+                        type="button"
+                        class="chip"
+                        :class="{ active: selectedOf(skill).name === detail.name }"
+                        :aria-pressed="selectedOf(skill).name === detail.name"
+                        @click="selected[skill.category] = detail.name"
                     >
-                        <p
-                            class="detail-logo"
-                            :style="{ background: detail.logoBackground, color: detail.logoColor }"
-                        >
-                            {{ detail.logoText }}
-                        </p>
-                        <div class="detail-text-wrap">
-                            <p class="text-name">{{ detail.name }}</p>
-                            <p class="text-desc">{{ detail.desc }}</p>
+                        {{ detail.name }}
+                    </button>
+                </div>
+                <div class="detail" aria-live="polite">
+                    <Transition name="fade" mode="out-in">
+                        <div :key="selectedOf(skill).name" class="detail-inner">
+                            <div class="detail-head">
+                                <span class="detail-logo">{{ selectedOf(skill).logoText }}</span>
+                                <p class="detail-name">{{ selectedOf(skill).name }}</p>
+                            </div>
+                            <p class="detail-desc">{{ selectedOf(skill).desc }}</p>
                         </div>
-                    </div>
+                    </Transition>
                 </div>
             </div>
         </div>
@@ -39,21 +43,30 @@
 </template>
 
 <script setup lang="ts">
-    import type { MainSkillData } from "~/structure/user"
+    import type { MainSkillData, MainSkillDataDetail } from "~/structure/user"
 
     defineProps<{
         skillData: MainSkillData[]
     }>()
+
+    // 카테고리마다 선택된 기술 이름. 선택 전에는 첫 번째 기술을 보여 준다
+    const selected = reactive<Record<string, string>>({})
+
+    const selectedOf = (skill: MainSkillData): MainSkillDataDetail =>
+        skill.data.find((d) => d.name === selected[skill.category]) ?? skill.data[0]
+
+    // 카테고리마다 팔레트 색 하나(파랑/그린/주황)를 칩·패널에 쓴다
+    const toneOf = (category: MainSkillData["category"]): string => {
+        if (category === "Languages") return "var(--blue)"
+        else if (category === "Frameworks & Libraries") return "var(--green)"
+        else return "var(--orange)"
+    }
 
     const categoryIcon = (category: MainSkillData["category"]): string => {
         if (category === "Languages") return "icon-code"
         else if (category === "Frameworks & Libraries") return "icon-books"
         else return "icon-tool"
     }
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -72,7 +85,7 @@
             .skill-content {
                 display: flex;
                 flex-direction: column;
-                gap: 30px;
+                gap: 16px;
 
                 .content-category-wrap {
                     display: flex;
@@ -80,8 +93,8 @@
                     gap: 10px;
 
                     .category-title {
-                        font-family: var(--mono);
                         min-width: 0;
+                        font-family: var(--mono);
                         font-size: 20px;
                         line-height: 1.4;
                         font-weight: 700;
@@ -93,101 +106,128 @@
 
                         &::before {
                             content: "// ";
-                            color: var(--green);
+                            color: var(--tone);
                         }
                     }
                 }
 
-                .content-details {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    column-gap: 10px;
-                    row-gap: 15px;
+                .chips {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
 
-                    @media (max-width: 1024px) {
-                        grid-template-columns: repeat(2, 1fr);
-                    }
-
-                    @media (max-width: 480px) {
-                        grid-template-columns: 1fr;
-                    }
-
-                    .content-detail-wrap {
-                        padding: 20px;
-                        background: var(--gray);
+                    .chip {
+                        padding: 6px 12px;
                         border: 1px solid var(--line);
-                        border-radius: 6px;
-                        position: relative;
-                        overflow: hidden;
+                        border-radius: 4px;
+                        background: var(--gray);
+                        font-family: var(--mono);
+                        font-size: 13px;
+                        color: var(--primary);
+                        cursor: pointer;
                         transition:
-                            transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                            border-color 0.3s ease,
-                            box-shadow 0.3s ease;
+                            color 0.2s ease,
+                            background-color 0.2s ease,
+                            border-color 0.2s ease,
+                            transform 0.2s ease;
 
                         &:hover {
-                            transform: translateY(-4px);
-                            border-color: var(--green);
-                            box-shadow: 0 12px 28px -12px rgb(63 185 80 / 40%);
+                            color: var(--white);
+                            border-color: var(--tone);
                         }
+
+                        &:active {
+                            transform: scale(0.95);
+                        }
+
+                        &:focus-visible {
+                            outline: 2px solid var(--white);
+                            outline-offset: 2px;
+                        }
+
+                        &.active {
+                            color: var(--tone);
+                            border-color: var(--tone);
+                            background: color-mix(in srgb, var(--tone) 14%, transparent);
+                        }
+                    }
+                }
+
+                // 내용 길이가 달라도 칩 아래가 흔들리지 않게 높이를 확보한다
+                .detail {
+                    min-height: 104px;
+                    padding: 16px 20px;
+                    background: var(--gray);
+                    border: 1px solid var(--line);
+                    border-left: 2px solid var(--tone);
+                    border-radius: 6px;
+
+                    .detail-inner {
                         display: flex;
                         flex-direction: column;
                         gap: 10px;
+                    }
 
-                        // 커서를 따라오는 글로우
-                        &::before {
-                            content: "";
-                            position: absolute;
-                            inset: 0;
-                            pointer-events: none;
-                            opacity: 0;
-                            background: radial-gradient(
-                                200px circle at var(--mx, 50%) var(--my, 50%),
-                                rgb(63 185 80 / 18%),
-                                transparent 70%
-                            );
-                            transition: opacity 0.3s ease;
-                        }
+                    .detail-head {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
 
-                        &:hover::before {
-                            opacity: 1;
-                        }
+                    .detail-logo {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: var(--rounded-2xs);
+                        font-family: var(--mono);
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: var(--tone);
+                        background: color-mix(in srgb, var(--tone) 15%, transparent);
+                        border: 1px solid color-mix(in srgb, var(--tone) 40%, transparent);
+                    }
 
-                        > * {
-                            position: relative;
-                        }
+                    .detail-name {
+                        font-family: var(--mono);
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: var(--white);
+                    }
 
-                        .detail-logo {
-                            font-family: var(--mono);
-                            font-size: 14px;
-                            font-weight: 700;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            width: 30px;
-                            height: 30px;
-                            border-radius: var(--rounded-2xs);
-                        }
-
-                        .detail-text-wrap {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 5px;
-                            color: var(--white);
-
-                            .text-name {
-                                font-family: var(--mono);
-                                font-size: 16px;
-                                font-weight: 700;
-                            }
-
-                            .text-desc {
-                                font-size: 13px;
-                                line-height: 140%;
-                            }
-                        }
+                    .detail-desc {
+                        font-size: 14px;
+                        line-height: 160%;
+                        word-break: keep-all;
+                        color: var(--white);
                     }
                 }
             }
+        }
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .fade-enter-from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .fade-enter-active,
+        .fade-leave-active,
+        .skill .chip {
+            transition-duration: 0.01ms;
         }
     }
 </style>
