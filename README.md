@@ -9,7 +9,7 @@
 | 프레임워크 | Nuxt 3, Vue 3 (`<script setup>` + TypeScript) |
 | 스타일 | SCSS (scoped, CSS 변수 기반 다크 테마) |
 | 라이브러리 | Embla Carousel(+Autoplay), AOS, Lenis(CDN 로드) |
-| 패키지 매니저 | Yarn |
+| 패키지 매니저 | pnpm |
 
 외부 라이브러리는 꼭 필요한 것만 쓰고, 나머지는 브라우저 표준 API로 구현했습니다.
 
@@ -69,10 +69,10 @@
 ## 실행
 
 ```bash
-yarn install
-yarn dev        # http://localhost:3004
-yarn build      # 프로덕션 빌드
-yarn preview    # 빌드 결과 미리보기
+pnpm install
+pnpm dev        # http://localhost:3004
+pnpm build      # 프로덕션 빌드
+pnpm preview    # 빌드 결과 미리보기
 ```
 
 ## 프로젝트 추가하기

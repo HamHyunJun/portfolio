@@ -22,7 +22,7 @@
 - `main.scss`는 `nuxt.config.ts`의 `css`로 전역 로드됨.
 
 ### Testing Requirements
-- `yarn dev`로 시각 확인.
+- `pnpm dev`로 시각 확인.
 
 ## Dependencies
 

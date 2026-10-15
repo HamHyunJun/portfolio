@@ -29,7 +29,7 @@
 - 색상/라운드는 `main.scss`의 CSS 변수(`--white`, `--gray`, `--rounded-*`) 사용.
 
 ### Testing Requirements
-- `yarn dev`로 브라우저 확인(스크롤/활성 섹션/캐러셀).
+- `pnpm dev`로 브라우저 확인(스크롤/활성 섹션/캐러셀).
 
 ### Common Patterns
 - 클래스 네이밍: `<block>-<element>` 중첩 SCSS.
