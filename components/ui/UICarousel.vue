@@ -44,6 +44,9 @@
         emit("change", embla?.selectedScrollSnap() ?? 0)
     }
 
+    // 카드 클릭으로 해당 슬라이드로 넘기기 위해 노출한다
+    defineExpose({ scrollTo: (index: number): void => embla?.scrollTo(index) })
+
     onBeforeUnmount(() => embla?.destroy())
 </script>
 

@@ -26,6 +26,13 @@
                         {{ detail.name }}
                     </button>
                 </div>
+                <!-- PDF(인쇄)에서는 클릭할 수 없으므로 모든 기술의 설명을 펼쳐 보여 준다 -->
+                <ul class="print-list" aria-hidden="true">
+                    <li v-for="detail in skill.data" :key="detail.name">
+                        <span class="print-name">{{ detail.name }}</span>
+                        <span class="print-desc">{{ detail.desc }}</span>
+                    </li>
+                </ul>
                 <div class="detail" aria-live="polite">
                     <Transition name="fade" mode="out-in">
                         <div :key="selectedOf(skill).name" class="detail-inner">
@@ -150,6 +157,36 @@
                             border-color: var(--tone);
                             background: color-mix(in srgb, var(--tone) 14%, transparent);
                         }
+                    }
+                }
+
+                .print-list {
+                    display: none;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+
+                    li {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+                        margin-bottom: 8px;
+                        padding-left: 12px;
+                        border-left: 2px solid var(--tone);
+                        break-inside: avoid;
+                    }
+
+                    .print-name {
+                        font-family: var(--mono);
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: var(--white);
+                    }
+
+                    .print-desc {
+                        font-size: 13px;
+                        line-height: 150%;
+                        color: var(--primary);
                     }
                 }
 

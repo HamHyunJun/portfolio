@@ -7,6 +7,7 @@ export interface MainAboutData {
 export interface AboutData {
     date: string
     detail: string
+    points?: string[]
 }
 
 export interface MainSkillData {
@@ -27,6 +28,7 @@ export interface MainWorkData {
     period: string
     summary: string
     stack: string[]
+    aiTools?: string[]
     webImage?: string
     appImage?: string
     links: ContactLink[]

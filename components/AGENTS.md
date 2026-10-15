@@ -9,13 +9,12 @@
 ## Key Files
 | File | Description |
 |------|-------------|
-| `MainAbout.vue` | 학력·수상·경력 목록. `MainAboutData` props |
-| `MainSkill.vue` | 카테고리별 스킬 목록. `MainSkillData[]` props |
-| `MainWorks.vue` | Works 캐러셀 + 카드 아코디언(`data/works.ts`의 `MainWorkData[]`). 데이터가 없으면 빈 상태 문구 표시 |
-| `MainContact.vue` | 하단 연락 링크(`data/contacts.ts`). 데이터가 없으면 렌더링 안 함 |
+| `MainAbout.vue` | 경력·수상·학력 목록(경력은 `points` 성과 포함). `MainAboutData` props |
+| `MainSkill.vue` | 카테고리별 칩 + 선택한 기술의 상세 패널(PDF에서는 전체 설명 펼침). `MainSkillData[]` props |
+| `MainWorks.vue` | Works 캐러셀 + 카드 아코디언. `data/works.ts`의 `companyWorks`/`sideWorks`를 그룹별 캐러셀로 표시하고, 비어 있는 그룹은 숨김. 둘 다 비면 빈 상태 문구 |
+| `MainContact.vue` | 하단 연락 링크(`data/contacts.ts`)와 PDF 저장 버튼. 데이터가 없으면 렌더링 안 함 |
 | `MainAside.vue` | VS Code 탐색기 스타일 섹션 내비(`<nav>`+`<button>`). 데스크톱은 좌측 sticky, 768px 이하는 하단 고정 바. `files`·`activeSection` prop, `select` emit |
 | `MainTabs.vue` | 에디터 상단 탭 바(활성 섹션 = 활성 탭). 모바일에서는 숨김 |
-| `MainMarquee.vue` | 히어로 아래에서 기술 이름이 두 줄로 반대 방향으로 흐르는 띠(CSS 애니메이션, hover 시 일시정지). `items` prop |
 | `MainStatusBar.vue` | 화면 하단 고정 상태바(`Ln N`, 현재 파일). 모바일에서는 숨김 |
 | `MainSectionTitle.vue` | 구분선 + 섹션 제목. `title` prop |
 

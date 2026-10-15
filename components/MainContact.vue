@@ -18,12 +18,21 @@
                 </a>
             </li>
         </ul>
+        <button type="button" class="contact-pdf" @click="savePdf">PDF로 저장</button>
     </nav>
 </template>
 
 <script setup lang="ts">
     import { contacts } from "~/data/contacts"
     import type { ContactLink } from "~/structure/user"
+
+    // 브라우저 인쇄 창에서 "PDF로 저장"을 고르면 된다. 파일 이름은 문서 제목을 따라가서 잠깐 바꾼다
+    const savePdf = (): void => {
+        const prev = document.title
+        document.title = "HAM HYUN JUN - Portfolio"
+        window.print()
+        document.title = prev
+    }
 
     const isExternal = (href: string): boolean => /^https?:\/\//.test(href)
 
@@ -54,6 +63,44 @@
             letter-spacing: -0.02em;
             color: var(--white);
             word-break: keep-all;
+        }
+
+        .contact-pdf {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid var(--green);
+            border-radius: 4px;
+            background: transparent;
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--green);
+            cursor: pointer;
+            transition:
+                background-color 0.25s ease,
+                color 0.25s ease,
+                transform 0.2s ease;
+
+            &::before {
+                content: "↓";
+            }
+
+            &:hover {
+                background: var(--green);
+                color: var(--base-background);
+            }
+
+            &:active {
+                transform: scale(0.96);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--white);
+                outline-offset: 3px;
+            }
         }
 
         .contact-list {
