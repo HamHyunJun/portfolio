@@ -1,11 +1,11 @@
 <template>
     <nav v-if="contacts.length" class="contact" aria-label="연락처">
         <MainSectionTitle title="CONTACT" no="04" />
-        <p class="contact-lead">
+        <p class="contact-lead" data-aos="fade-up">
             함께 만들어 갈 기회를<br />
             기다리고 있어요.
         </p>
-        <ul class="contact-list">
+        <ul class="contact-list" @pointermove="trackGlow($event, '.contact-link')">
             <li v-for="contact in contacts" :key="contact.href">
                 <a
                     class="contact-link"
@@ -76,10 +76,34 @@
                 background: var(--gray);
                 color: var(--white);
                 text-decoration: none;
+                overflow: hidden;
                 transition:
                     transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
                     background-color 0.3s ease,
                     border-color 0.3s ease;
+
+                // 커서를 따라오는 글로우
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    pointer-events: none;
+                    opacity: 0;
+                    background: radial-gradient(
+                        220px circle at var(--mx, 50%) var(--my, 50%),
+                        rgb(63 185 80 / 18%),
+                        transparent 70%
+                    );
+                    transition: opacity 0.3s ease;
+                }
+
+                &:hover::before {
+                    opacity: 1;
+                }
+
+                > span {
+                    position: relative;
+                }
 
                 &::after {
                     content: "↗" / "";

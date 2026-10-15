@@ -1,6 +1,8 @@
 <template>
     <main class="main-page">
-        <section class="section main-board">
+        <div ref="progressRef" class="progress" aria-hidden="true"></div>
+        <section class="section main-board" @pointermove="onBoardMove">
+            <div class="board-glow" aria-hidden="true"></div>
             <div class="board-lines" aria-hidden="true">
                 <span
                     v-for="(top, n) in [18, 36, 64, 82]"
@@ -13,7 +15,21 @@
                 <span>~/portfolio — zsh</span>
             </div>
             <div class="board-title">
-                <h1 class="board-name" aria-label="HAM HYUN JUN">
+                <p class="board-ticker" aria-hidden="true">
+                    <span>&lt;</span>
+                    <span class="ticker-window">
+                        <span class="ticker-list">
+                            <span v-for="(word, n) in tickerWords" :key="n">{{ word }}</span>
+                        </span>
+                    </span>
+                    <span>/&gt;</span>
+                </p>
+                <h1
+                    ref="nameRef"
+                    class="board-name"
+                    aria-label="HAM HYUN JUN"
+                    @pointerenter="scrambleName(false)"
+                >
                     <span
                         v-for="(line, row) in nameLines"
                         :key="row"
@@ -49,6 +65,7 @@
                 </div>
             </div>
         </section>
+        <MainMarquee :items="stackNames" />
         <div class="main-contents">
             <MainAside
                 class="main-aside"
@@ -180,6 +197,8 @@
 
     const activeSection = ref<SectionKey | null>(null)
     const contentRef = ref<HTMLElement | null>(null)
+    const progressRef = ref<HTMLElement | null>(null)
+    const nameRef = ref<HTMLElement | null>(null)
     const lineCount = ref(0)
     const line = ref(1)
     const activeFile = computed(() => files.find((f) => f.key === activeSection.value) ?? files[0])
@@ -348,6 +367,12 @@
         },
     ])
 
+    // 마키에 흘려 보낼 기술 이름 (스킬 데이터에서 그대로 가져온다)
+    const stackNames = computed(() => skillData.value.flatMap((c) => c.data.map((d) => d.name)))
+
+    // 히어로 라벨에서 순서대로 바뀌는 단어. 끝의 첫 단어 복사본이 무한 루프를 이어 준다
+    const tickerWords = ["Front-End", "Vue", "Nuxt", "TypeScript", "Front-End"]
+
     const sectionRefs = {
         about: aboutRef,
         skill: skillRef,
@@ -374,16 +399,58 @@
         window.removeEventListener("scroll", onScroll)
     })
 
+    // 히어로 위에서 커서 위치를 CSS 변수로 넘겨 스포트라이트와 점 격자 하이라이트가 따라오게 한다
+    const onBoardMove = (e: PointerEvent): void => {
+        const el = e.currentTarget as HTMLElement
+        const rect = el.getBoundingClientRect()
+        el.style.setProperty("--mx", `${e.clientX - rect.left}px`)
+        el.style.setProperty("--my", `${e.clientY - rect.top}px`)
+    }
+
+    const prefersReducedMotion = (): boolean =>
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    // 이름 글자가 코드 기호로 깜빡이다 제 글자로 해독되는 효과 (진입 시 1회 + hover 때마다)
+    const GLYPHS = "01<>/{}[]#$%&*"
+    let scrambling = false
+    const scrambleName = (intro: boolean): void => {
+        const els = nameRef.value?.querySelectorAll<HTMLElement>(".board-char")
+        if (!els || scrambling || prefersReducedMotion()) return
+        scrambling = true
+        let done = 0
+        els.forEach((el, n) => {
+            const final = el.textContent?.trim() ?? ""
+            const delay = intro ? Number(el.style.getPropertyValue("--i")) * 70 + 150 : n * 30
+            let frame = 0
+            const tick = (): void => {
+                if (frame++ >= 8 + n) {
+                    el.textContent = final
+                    if (++done === els.length) scrambling = false
+                    return
+                }
+                el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
+                setTimeout(tick, 45)
+            }
+            setTimeout(tick, delay)
+        })
+    }
+
     // 스크롤 위치를 에디터의 "Ln N"으로 환산해 상태바에 보여 준다
     const onScroll = (): void => {
         cancelAnimationFrame(scrollRafId)
         scrollRafId = requestAnimationFrame(() => {
             line.value = Math.floor(window.scrollY / LINE_HEIGHT) + 1
+            const max = document.documentElement.scrollHeight - window.innerHeight
+            progressRef.value?.style.setProperty(
+                "transform",
+                `scaleX(${max > 0 ? Math.min(window.scrollY / max, 1) : 0})`
+            )
         })
     }
 
     onMounted(() => {
-        AOS.init()
+        AOS.init({ once: true, disable: prefersReducedMotion })
+        scrambleName(true)
 
         // 에디터 높이에 맞춰 줄 번호 개수를 정한다
         sizeObserver = new ResizeObserver(([entry]) => {
@@ -476,6 +543,33 @@
         }
     }
 
+    // 단어 5개(마지막은 첫 단어 복사본) 높이 1.5em씩 4칸 이동 후 처음으로 이어진다
+    @keyframes ticker {
+        0%,
+        20% {
+            transform: translateY(0);
+        }
+
+        25%,
+        45% {
+            transform: translateY(-1.5em);
+        }
+
+        50%,
+        70% {
+            transform: translateY(-3em);
+        }
+
+        75%,
+        95% {
+            transform: translateY(-4.5em);
+        }
+
+        100% {
+            transform: translateY(-6em);
+        }
+    }
+
     @keyframes type {
         from {
             width: 0;
@@ -496,6 +590,7 @@
 
     @media (prefers-reduced-motion: reduce) {
         .board-char,
+        .ticker-list,
         .code-line,
         .code-prompt,
         .code-cursor,
@@ -506,6 +601,20 @@
     }
 
     .main-page {
+        // 상단 스크롤 진행 막대
+        .progress {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 30;
+            height: 2px;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
         .section {
             position: relative;
             padding: 120px 60px;
@@ -576,6 +685,31 @@
                     }
                 }
 
+                // 커서를 따라다니는 스포트라이트와, 커서 근처에서 밝아지는 점 격자
+                .board-glow {
+                    position: absolute;
+                    inset: 0;
+                    pointer-events: none;
+                    background: radial-gradient(
+                        420px circle at var(--mx, 75%) var(--my, 25%),
+                        rgb(63 185 80 / 14%),
+                        transparent 70%
+                    );
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        background: radial-gradient(rgb(63 185 80 / 80%) 1px, transparent 1px) 0 0 /
+                            32px 32px;
+                        mask-image: radial-gradient(
+                            220px circle at var(--mx, 75%) var(--my, 25%),
+                            #000,
+                            transparent
+                        );
+                    }
+                }
+
                 // 에디터 창 제목 줄
                 .board-bar {
                     position: absolute;
@@ -629,6 +763,40 @@
 
                     .board-name {
                         font: inherit;
+                    }
+
+                    // < Front-End /> 라벨의 단어가 세로로 굴러 바뀐다
+                    .board-ticker {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.6ch;
+                        margin-bottom: 16px;
+                        font-size: clamp(14px, 1.6vw, 22px);
+                        color: var(--green);
+
+                        &,
+                        * {
+                            font-family: var(--mono);
+                        }
+
+                        .ticker-window {
+                            display: inline-block;
+                            height: 1.5em;
+                            overflow: hidden;
+                            line-height: 1.5em;
+                            font-weight: 700;
+                        }
+
+                        .ticker-list {
+                            display: flex;
+                            flex-direction: column;
+                            animation: ticker 8s cubic-bezier(0.77, 0, 0.18, 1) infinite;
+
+                            span {
+                                height: 1.5em;
+                                line-height: 1.5em;
+                            }
+                        }
                     }
 
                     .board-line {

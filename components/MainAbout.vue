@@ -1,7 +1,7 @@
 <template>
     <div class="about">
         <MainSectionTitle title="ABOUT ME" no="01" />
-        <div class="about-contents">
+        <div class="about-contents" data-aos="fade-up">
             <div class="contents-title-container">
                 <i class="icon icon-education"></i>
                 <h3 class="contents-title">학력</h3>
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="about-contents">
+        <div class="about-contents" data-aos="fade-up" data-aos-delay="100">
             <div class="contents-title-container">
                 <i class="icon icon-awards"></i>
                 <h3 class="contents-title">자격 및 수상</h3>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="about-contents">
+        <div class="about-contents" data-aos="fade-up" data-aos-delay="200">
             <div class="contents-title-container">
                 <i class="icon icon-work"></i>
                 <h3 class="contents-title">경력</h3>
