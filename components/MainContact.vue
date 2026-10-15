@@ -71,8 +71,8 @@
                 gap: 12px;
                 height: 100%;
                 padding: 24px 48px 24px 24px;
-                border: 1px solid rgb(255 255 255 / 8%);
-                border-radius: var(--rounded-lg);
+                border: 1px solid var(--line);
+                border-radius: 6px;
                 background: var(--gray);
                 color: var(--white);
                 text-decoration: none;
@@ -92,8 +92,8 @@
 
                 &:hover {
                     transform: translateY(-4px);
-                    background: #323850;
-                    border-color: rgb(143 168 255 / 45%);
+                    background: rgb(63 185 80 / 8%);
+                    border-color: var(--green);
 
                     &::after {
                         transform: translate(3px, -3px);
@@ -109,16 +109,21 @@
                     outline-offset: 3px;
                 }
 
+                // 터미널 프롬프트처럼 보이게 "$ github" 형태로 표시
                 .contact-kind {
-                    font-size: 12px;
-                    font-weight: 600;
-                    letter-spacing: 0.1em;
-                    text-transform: uppercase;
-                    color: var(--primary);
+                    font-family: var(--mono);
+                    font-size: 13px;
+                    text-transform: lowercase;
+                    color: var(--green);
+
+                    &::before {
+                        content: "$ ";
+                    }
                 }
 
                 .contact-value {
-                    font-size: 18px;
+                    font-family: var(--mono);
+                    font-size: 16px;
                     font-weight: 600;
                     overflow-wrap: anywhere;
                 }

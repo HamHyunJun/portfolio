@@ -72,9 +72,15 @@
                     gap: 10px;
 
                     .category-title {
-                        font-size: 24px;
+                        font-family: var(--mono);
+                        font-size: 20px;
                         line-height: 0;
                         font-weight: 700;
+
+                        &::before {
+                            content: "// ";
+                            color: var(--green);
+                        }
                     }
                 }
 
@@ -94,9 +100,9 @@
 
                     .content-detail-wrap {
                         padding: 20px;
-                        background: linear-gradient(160deg, var(--gray), var(--base-background) 160%);
-                        border: 1px solid rgb(255 255 255 / 6%);
-                        border-radius: var(--rounded-sm);
+                        background: var(--gray);
+                        border: 1px solid var(--line);
+                        border-radius: 6px;
                         transition:
                             transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
                             border-color 0.3s ease,
@@ -104,14 +110,15 @@
 
                         &:hover {
                             transform: translateY(-4px);
-                            border-color: rgb(143 168 255 / 45%);
-                            box-shadow: 0 12px 28px -12px rgb(143 168 255 / 35%);
+                            border-color: var(--green);
+                            box-shadow: 0 12px 28px -12px rgb(63 185 80 / 40%);
                         }
                         display: flex;
                         flex-direction: column;
                         gap: 10px;
 
                         .detail-logo {
+                            font-family: var(--mono);
                             font-size: 14px;
                             font-weight: 700;
                             display: flex;
@@ -129,7 +136,8 @@
                             color: var(--white);
 
                             .text-name {
-                                font-size: 18px;
+                                font-family: var(--mono);
+                                font-size: 16px;
                                 font-weight: 700;
                             }
 

@@ -141,8 +141,8 @@
                     .slide-container {
                         height: 100%;
                         background: var(--gray);
-                        border: 1px solid rgb(255 255 255 / 8%);
-                        border-radius: var(--rounded-lg);
+                        border: 1px solid var(--line);
+                        border-radius: 8px;
                         transform: scale(1);
                         transition:
                             transform 0.4s ease,
@@ -154,7 +154,7 @@
                         &.active {
                             transform: scale(1.05);
                             z-index: 1;
-                            border-color: rgb(255 255 255 / 20%);
+                            border-color: var(--green);
 
                             .slide-media .media-stage {
                                 opacity: 1;
@@ -297,10 +297,10 @@
                             }
 
                             .toggle-period {
+                                font-family: var(--mono);
                                 font-size: 12px;
-                                font-weight: 600;
-                                letter-spacing: 0.1em;
-                                color: var(--primary);
+                                letter-spacing: 0.05em;
+                                color: var(--green);
                             }
 
                             .toggle-title {
@@ -363,9 +363,10 @@
                                 li {
                                     padding: 4px 12px;
                                     border: 1px solid rgb(255 255 255 / 18%);
-                                    border-radius: var(--rounded-full);
+                                    border-radius: 4px;
                                     background: var(--base-background);
-                                    font-size: 13px;
+                                    font-family: var(--mono);
+                                    font-size: 12px;
                                 }
                             }
 
@@ -380,10 +381,11 @@
                                 align-items: center;
                                 gap: 6px;
                                 padding: 8px 16px;
-                                border: 1px solid rgb(255 255 255 / 30%);
-                                border-radius: var(--rounded-full);
+                                border: 1px solid var(--line);
+                                border-radius: 4px;
                                 color: var(--white);
-                                font-size: 14px;
+                                font-family: var(--mono);
+                                font-size: 13px;
                                 font-weight: 600;
                                 text-decoration: none;
                                 transition:

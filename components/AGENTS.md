@@ -13,7 +13,9 @@
 | `MainSkill.vue` | 카테고리별 스킬 목록. `MainSkillData[]` props |
 | `MainWorks.vue` | Works 캐러셀 + 카드 아코디언(`data/works.ts`의 `MainWorkData[]`). 데이터가 없으면 빈 상태 문구 표시 |
 | `MainContact.vue` | 하단 연락 링크(`data/contacts.ts`). 데이터가 없으면 렌더링 안 함 |
-| `MainAside.vue` | 섹션 내비(`<nav>`+`<button>`). 데스크톱은 좌측 sticky, 768px 이하는 하단 고정 바. `activeSection` prop, `select` emit |
+| `MainAside.vue` | VS Code 탐색기 스타일 섹션 내비(`<nav>`+`<button>`). 데스크톱은 좌측 sticky, 768px 이하는 하단 고정 바. `files`·`activeSection` prop, `select` emit |
+| `MainTabs.vue` | 에디터 상단 탭 바(활성 섹션 = 활성 탭). 모바일에서는 숨김 |
+| `MainStatusBar.vue` | 화면 하단 고정 상태바(`Ln N`, 현재 파일). 모바일에서는 숨김 |
 | `MainSectionTitle.vue` | 구분선 + 섹션 제목. `title` prop |
 
 ## Subdirectories

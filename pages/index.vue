@@ -8,6 +8,10 @@
                     :style="{ top: `${top}%`, '--n': n }"
                 ></span>
             </div>
+            <div class="board-bar" aria-hidden="true">
+                <i></i><i></i><i></i>
+                <span>~/portfolio — zsh</span>
+            </div>
             <div class="board-title">
                 <h1 class="board-name" aria-label="HAM HYUN JUN">
                     <span
@@ -29,35 +33,63 @@
                         </span>
                     </span>
                 </h1>
-                <p class="board-role">Front-End Developer</p>
+                <p class="sr-only">Front-End Developer</p>
+                <div class="board-code" aria-hidden="true">
+                    <p
+                        v-for="(line, n) in codeLines"
+                        :key="n"
+                        class="code-line"
+                        :style="{ '--len': line.len, '--delay': `${line.delay}ms` }"
+                    >
+                        <span v-for="(t, k) in line.tokens" :key="k" :class="t.type">{{ t.text }}</span>
+                    </p>
+                    <p class="code-prompt" :style="{ '--delay': `${promptDelay}ms` }">
+                        <span class="ps">$ </span><span class="code-cursor"></span>
+                    </p>
+                </div>
             </div>
         </section>
         <div class="main-contents">
             <MainAside
                 class="main-aside"
+                :files="files"
                 :active-section="activeSection"
                 @select="scrollToSection"
             />
-            <div class="main-content-wrap">
-                <section ref="aboutRef" class="section main-about">
-                    <MainAbout :about-data="aboutData" />
-                </section>
-                <section ref="skillRef" class="section main-skill">
-                    <MainSkill :skill-data="skillData" />
-                </section>
-                <section ref="worksRef" class="section main-works">
-                    <MainWorks />
-                </section>
-                <section class="section main-contact">
-                    <MainContact />
-                </section>
+            <div class="main-editor">
+                <MainTabs
+                    class="main-tabs"
+                    :files="files"
+                    :active-section="activeSection"
+                    @select="scrollToSection"
+                />
+                <div class="editor-body">
+                    <div class="gutter" aria-hidden="true">
+                        <span v-for="n in lineCount" :key="n">{{ n }}</span>
+                    </div>
+                    <div ref="contentRef" class="main-content-wrap">
+                        <section ref="aboutRef" class="section main-about">
+                            <MainAbout :about-data="aboutData" />
+                        </section>
+                        <section ref="skillRef" class="section main-skill">
+                            <MainSkill :skill-data="skillData" />
+                        </section>
+                        <section ref="worksRef" class="section main-works">
+                            <MainWorks />
+                        </section>
+                        <section class="section main-contact">
+                            <MainContact />
+                        </section>
+                    </div>
+                </div>
             </div>
         </div>
+        <MainStatusBar :file="activeFile.name" :line="line" />
     </main>
 </template>
 
 <script setup lang="ts">
-    import type { MainAboutData, MainSkillData } from "~/structure/user"
+    import type { MainAboutData, MainSkillData, NavFile, SectionKey } from "~/structure/user"
     import AOS from "aos"
     import "aos/dist/aos.css"
 
@@ -74,6 +106,8 @@
     let lenis: any
     let lenisRafId = 0
     let sectionObserver: IntersectionObserver | null = null
+    let sizeObserver: ResizeObserver | null = null
+    let scrollRafId = 0
 
     // 단어 단위로 줄바꿈되도록 단어별로 묶고, 글자 인덱스(공백 포함)는 진입 딜레이용으로 유지
     const nameLines = ["HAM", "HYUN JUN"].map((line) => {
@@ -85,9 +119,60 @@
         })
     })
 
-    type SectionKey = "about" | "skill" | "works"
+    type Token = { type: "ps" | "kw" | "fn" | "str" | "prop" | "dim"; text: string }
+
+    // 한 글자당 40ms로 한 줄씩 타이핑. 폭은 ch 단위라 글자 수와 정확히 맞는다
+    const codeSource: Token[][] = [
+        [
+            { type: "ps", text: "$ " },
+            { type: "fn", text: "whoami" },
+        ],
+        [
+            { type: "kw", text: "const " },
+            { type: "prop", text: "developer " },
+            { type: "dim", text: "= {" },
+        ],
+        [
+            { type: "dim", text: "  role: " },
+            { type: "str", text: '"Front-End Developer"' },
+            { type: "dim", text: "," },
+        ],
+        [
+            { type: "dim", text: "  stack: [" },
+            { type: "str", text: '"Vue"' },
+            { type: "dim", text: ", " },
+            { type: "str", text: '"Nuxt"' },
+            { type: "dim", text: ", " },
+            { type: "str", text: '"TypeScript"' },
+            { type: "dim", text: "]," },
+        ],
+        [{ type: "dim", text: "}" }],
+    ]
+    let codeDelay = 1100
+    const codeLines = codeSource.map((tokens) => {
+        const len = tokens.reduce((sum, t) => sum + t.text.length, 0)
+        const line = { tokens, len, delay: codeDelay }
+        codeDelay += len * 40 + 150
+        return line
+    })
+
+    // 타이핑이 모두 끝난 뒤 깜빡이는 프롬프트가 나타난다
+    const promptDelay = codeDelay
+
+    // 탐색기·탭·상태바가 같이 쓰는 파일 목록
+    const files: NavFile[] = [
+        { key: "about", name: "about.md", glyph: "M↓", color: "#79c0ff" },
+        { key: "skill", name: "skills.json", glyph: "{}", color: "#e3b341" },
+        { key: "works", name: "works.tsx", glyph: "TS", color: "#3178c6" },
+    ]
+
+    const LINE_HEIGHT = 24
 
     const activeSection = ref<SectionKey | null>(null)
+    const contentRef = ref<HTMLElement | null>(null)
+    const lineCount = ref(0)
+    const line = ref(1)
+    const activeFile = computed(() => files.find((f) => f.key === activeSection.value) ?? files[0])
     const aboutRef = ref<HTMLElement | null>(null)
     const skillRef = ref<HTMLElement | null>(null)
     const worksRef = ref<HTMLElement | null>(null)
@@ -274,10 +359,28 @@
         lenis?.destroy()
         cancelAnimationFrame(lenisRafId)
         sectionObserver?.disconnect()
+        sizeObserver?.disconnect()
+        cancelAnimationFrame(scrollRafId)
+        window.removeEventListener("scroll", onScroll)
     })
+
+    // 스크롤 위치를 에디터의 "Ln N"으로 환산해 상태바에 보여 준다
+    const onScroll = (): void => {
+        cancelAnimationFrame(scrollRafId)
+        scrollRafId = requestAnimationFrame(() => {
+            line.value = Math.floor(window.scrollY / LINE_HEIGHT) + 1
+        })
+    }
 
     onMounted(() => {
         AOS.init()
+
+        // 에디터 높이에 맞춰 줄 번호 개수를 정한다
+        sizeObserver = new ResizeObserver(([entry]) => {
+            lineCount.value = Math.floor(entry.contentRect.height / LINE_HEIGHT)
+        })
+        if (contentRef.value) sizeObserver.observe(contentRef.value)
+        window.addEventListener("scroll", onScroll, { passive: true })
 
         ensureLenis().then(() => {
             lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
@@ -363,16 +466,29 @@
         }
     }
 
-    @keyframes role-fade {
+    @keyframes type {
+        from {
+            width: 0;
+        }
+    }
+
+    @keyframes show {
         from {
             opacity: 0;
-            letter-spacing: 0.8em;
+        }
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
         }
     }
 
     @media (prefers-reduced-motion: reduce) {
         .board-char,
-        .board-role,
+        .code-line,
+        .code-prompt,
+        .code-cursor,
         .board-lines span,
         .board-lines span::after {
             animation: none !important;
@@ -389,8 +505,8 @@
                 height: 100vh;
                 margin: auto 0;
                 background:
-                    radial-gradient(60% 50% at 85% 10%, rgb(143 168 255 / 14%), transparent 70%),
-                    radial-gradient(50% 40% at 5% 95%, rgb(143 168 255 / 8%), transparent 70%),
+                    radial-gradient(60% 50% at 85% 10%, rgb(63 185 80 / 10%), transparent 70%),
+                    radial-gradient(50% 40% at 5% 95%, rgb(63 185 80 / 6%), transparent 70%),
                     var(--base-background);
                 position: sticky;
                 top: 10px;
@@ -418,7 +534,7 @@
                         width: 100%;
                         height: 1px;
                         overflow: hidden;
-                        background: rgb(143 168 255 / 18%);
+                        background: rgb(63 185 80 / 18%);
                         animation: line-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
                         animation-delay: calc(var(--n) * 150ms);
 
@@ -428,7 +544,7 @@
                             top: 0;
                             width: 18%;
                             height: 100%;
-                            background: linear-gradient(90deg, transparent, rgb(255 255 255 / 55%));
+                            background: linear-gradient(90deg, transparent, rgb(63 185 80 / 70%));
                             animation: line-streak 7s ease-in-out infinite;
                             animation-delay: calc(var(--n) * 0.25s + 0.7s);
                             left: -20%;
@@ -443,10 +559,52 @@
                                 background: linear-gradient(
                                     270deg,
                                     transparent,
-                                    rgb(255 255 255 / 55%)
+                                    rgb(63 185 80 / 70%)
                                 );
                             }
                         }
+                    }
+                }
+
+                // 에디터 창 제목 줄
+                .board-bar {
+                    position: absolute;
+                    right: 0;
+                    left: 0;
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 60px;
+                    font-family: var(--mono);
+                    font-size: 12px;
+                    color: var(--primary);
+
+                    * {
+                        font-family: var(--mono);
+                    }
+                }
+
+                .board-bar {
+                    top: 0;
+                    gap: 8px;
+                    border-bottom: 1px solid var(--line);
+
+                    i {
+                        width: 12px;
+                        height: 12px;
+                        border-radius: 50%;
+                        background: #ff5f56;
+
+                        &:nth-child(2) {
+                            background: #ffbd2e;
+                        }
+
+                        &:nth-child(3) {
+                            background: #27c93f;
+                        }
+                    }
+
+                    span {
+                        margin-left: 12px;
                     }
                 }
 
@@ -479,12 +637,6 @@
 
                     .board-title-top {
                         text-align: left;
-
-                        // 윗줄은 속이 빈 아웃라인으로 아랫줄과 무게 대비를 준다
-                        .board-char {
-                            color: transparent;
-                            -webkit-text-stroke: 1.5px var(--white);
-                        }
                     }
 
                     .board-title-bottom {
@@ -494,18 +646,86 @@
                     // 글자가 아래에서 위로 한 글자씩 올라오는 진입 효과
                     .board-char {
                         display: inline-block;
+                        // 두 줄 모두 속이 빈 아웃라인
+                        color: transparent;
+                        -webkit-text-stroke: 1.5px var(--white);
                         animation: char-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
                         animation-delay: calc(var(--i) * 70ms + 150ms);
                     }
 
-                    .board-role {
-                        margin-top: 24px;
-                        font-size: clamp(14px, 1.6vw, 22px);
-                        font-weight: 400;
-                        letter-spacing: 0.4em;
-                        text-align: right;
-                        color: var(--blue);
-                        animation: role-fade 1s ease 1.1s both;
+                    // 터미널에 한 줄씩 타이핑되는 코드 블록 (JS 없이 CSS steps로 구현)
+                    .board-code {
+                        width: fit-content;
+                        margin: 32px 0 0 auto;
+                        padding: 16px 20px;
+                        background: rgb(22 27 34 / 85%);
+                        border: 1px solid var(--line);
+                        border-radius: 8px;
+                        font-size: clamp(11px, 1.1vw, 15px);
+
+                        &,
+                        * {
+                            font-family: var(--mono);
+                        }
+
+                        p {
+                            margin: 0;
+                            line-height: 1.8;
+                            white-space: pre;
+                        }
+
+                        .code-line {
+                            width: calc(var(--len) * 1ch);
+                            overflow: hidden;
+                            animation: type calc(var(--len) * 40ms) steps(var(--len)) both;
+                            animation-delay: var(--delay);
+                        }
+
+                        .code-prompt {
+                            animation: show 0s var(--delay) both;
+                        }
+
+                        .code-cursor {
+                            display: inline-block;
+                            width: 0.6em;
+                            height: 1.1em;
+                            vertical-align: text-bottom;
+                            background: var(--green);
+                            animation: blink 1.1s steps(1) infinite;
+                        }
+
+                        .ps {
+                            color: var(--green);
+                        }
+
+                        .kw {
+                            color: #ff7b72;
+                        }
+
+                        .fn {
+                            color: var(--purple);
+                        }
+
+                        .str {
+                            color: var(--blue);
+                        }
+
+                        .prop {
+                            color: var(--orange);
+                        }
+
+                        .dim {
+                            color: var(--primary);
+                        }
+                    }
+
+                    .sr-only {
+                        position: absolute;
+                        width: 1px;
+                        height: 1px;
+                        overflow: hidden;
+                        clip-path: inset(50%);
+                        white-space: nowrap;
                     }
                 }
             }
@@ -528,18 +748,57 @@
                 height: 100vh;
                 flex-shrink: 0;
                 align-self: flex-start;
-                background: var(--base-background);
                 position: sticky;
                 top: 10px;
             }
 
-            .main-content-wrap {
+            .main-editor {
                 min-width: 0;
                 flex: 1;
-                display: flex;
-                flex-direction: column;
+
+                .main-tabs {
+                    position: sticky;
+                    top: 0;
+                    z-index: 5;
+                }
+
+                .editor-body {
+                    display: flex;
+                }
+
+                // 줄 번호 거터
+                .gutter {
+                    flex: 0 0 56px;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    border-right: 1px solid var(--line);
+                    background: var(--base-background);
+                    font-family: var(--mono);
+                    font-size: 12px;
+                    color: #484f58;
+                    user-select: none;
+
+                    span {
+                        flex: 0 0 24px;
+                        padding-right: 16px;
+                        font-family: var(--mono);
+                        line-height: 24px;
+                        text-align: right;
+                    }
+                }
+
+                .main-content-wrap {
+                    min-width: 0;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                }
             }
         }
+
+        // 하단 고정 상태바가 마지막 내용을 가리지 않게 한다
+        padding-bottom: 26px;
 
         @media (max-width: 768px) {
             .section {
@@ -547,6 +806,14 @@
 
                 &.main-board .board-title {
                     font-size: clamp(48px, 18vw, 120px);
+                }
+
+                &.main-board .board-bar {
+                    padding: 12px 20px;
+                }
+
+                &.main-board .board-code {
+                    font-size: 11px;
                 }
 
                 &.main-about {
@@ -566,7 +833,11 @@
                     z-index: 10;
                 }
 
-                .main-content-wrap {
+                .main-editor .gutter {
+                    display: none;
+                }
+
+                .main-editor .main-content-wrap {
                     padding-bottom: 64px;
                 }
             }

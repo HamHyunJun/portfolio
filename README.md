@@ -22,8 +22,10 @@
 - 모두 CSS `@keyframes`와 `animation-delay`(`--i`, `--n` 변수)로만 구현했고 JS는 쓰지 않습니다.
 - `prefers-reduced-motion`이 켜져 있으면 애니메이션을 끕니다.
 
-### 섹션 내비게이션 (Aside)
-- 데스크톱은 좌측 sticky 메뉴, 768px 이하에서는 하단 고정 바로 바뀝니다.
+### 에디터 레이아웃 (Aside · Tabs · StatusBar)
+- VS Code처럼 좌측 파일 탐색기(`about.md`, `skills.json`, `works.tsx`), 상단 탭, 줄 번호, 하단 상태바로 구성했습니다.
+- 줄 번호는 `ResizeObserver`로 에디터 높이를 재서 개수를 정하고, 상태바의 `Ln N`은 스크롤 위치에서 계산합니다.
+- 데스크톱은 좌측 sticky 탐색기, 768px 이하에서는 하단 고정 바로 바뀌고 탭·줄 번호·상태바는 숨깁니다.
 - 현재 섹션 표시는 `IntersectionObserver`가 스크롤 위치를 추적해 갱신합니다.
 - 메뉴 이동은 Lenis의 `scrollTo`를 쓰고, Lenis를 쓸 수 없으면 `scrollIntoView`로 대체합니다.
 - 하단 바가 Tab 포커스 요소를 가리지 않도록 모바일에서 `scroll-padding-bottom`을 줬습니다.
