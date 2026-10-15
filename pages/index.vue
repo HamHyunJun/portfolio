@@ -1018,7 +1018,7 @@
                 }
 
                 .main-editor .main-content-wrap {
-                    padding-bottom: 64px;
+                    padding-bottom: 72px;
                 }
             }
         }

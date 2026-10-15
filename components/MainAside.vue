@@ -111,11 +111,11 @@
     }
 
     @media (max-width: 768px) {
+        // 탭 바 형태: 같은 폭으로 나누고 칸 사이에 구분선, 활성 칸은 위쪽 그린 선과 배경으로 강조
         .aside {
             flex-direction: row;
-            align-items: center;
-            justify-content: space-around;
-            padding: 12px 8px;
+            align-items: stretch;
+            padding: 0 0 env(safe-area-inset-bottom);
             border-top: 1px solid var(--line);
             border-right: 0;
 
@@ -124,12 +124,30 @@
             }
 
             .aside-content {
-                padding: 8px 6px;
+                flex: 1;
+                min-width: 0;
+                flex-direction: column;
+                justify-content: center;
+                gap: 4px;
+                height: 56px;
+                padding: 0 2px;
                 border-left: 0;
+                border-right: 1px solid var(--line);
                 font-size: 11px;
+                color: var(--white);
+
+                &:last-child {
+                    border-right: 0;
+                }
+
+                &.active {
+                    background: rgb(63 185 80 / 12%);
+                    box-shadow: inset 0 2px 0 var(--green);
+                }
 
                 .file-icon {
-                    display: none;
+                    width: auto;
+                    font-size: 12px;
                 }
             }
         }
