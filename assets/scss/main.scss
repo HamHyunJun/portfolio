@@ -2,10 +2,13 @@
 @use "icons.scss";
 
 :root {
-    --primary: #B4B4B4;
-    --base-background: #141414;
-    --white: #DCDCDC;
-    --gray: #3C3C3C;
+    // 살짝 푸른 기가 도는 차콜 + 하나의 포인트 컬러(인디고 블루)
+    --primary: #A9B1C6;
+    --base-background: #11131a;
+    --white: #E6E9F2;
+    --gray: #262b3a;
+    --blue: #8fa8ff;
+    --blue-dim: rgb(143 168 255 / 14%);
 
     --rounded: 14px;
     --rounded-2xs: 4px;

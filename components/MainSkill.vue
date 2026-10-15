@@ -1,6 +1,6 @@
 <template>
     <div class="skill">
-        <MainSectionTitle title="SKILLS" />
+        <MainSectionTitle title="SKILLS" no="02" />
         <div class="skill-contents">
             <div v-for="(skill, index) in skillData" :key="index" class="skill-content">
                 <div class="content-category-wrap">
@@ -94,8 +94,19 @@
 
                     .content-detail-wrap {
                         padding: 20px;
-                        background: var(--gray);
+                        background: linear-gradient(160deg, var(--gray), var(--base-background) 160%);
+                        border: 1px solid rgb(255 255 255 / 6%);
                         border-radius: var(--rounded-sm);
+                        transition:
+                            transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                            border-color 0.3s ease,
+                            box-shadow 0.3s ease;
+
+                        &:hover {
+                            transform: translateY(-4px);
+                            border-color: rgb(143 168 255 / 45%);
+                            box-shadow: 0 12px 28px -12px rgb(143 168 255 / 35%);
+                        }
                         display: flex;
                         flex-direction: column;
                         gap: 10px;

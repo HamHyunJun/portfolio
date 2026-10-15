@@ -61,7 +61,7 @@
             }
 
             &.active {
-                color: var(--white);
+                color: var(--blue);
             }
 
             &:focus-visible {
