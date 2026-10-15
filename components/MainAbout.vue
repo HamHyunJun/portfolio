@@ -118,6 +118,10 @@
                     align-items: flex-start;
                     gap: 16px;
 
+                    @media (max-width: 768px) {
+                        gap: 12px;
+                    }
+
                     // 타임라인 점
                     &::before {
                         content: "";
@@ -143,6 +147,12 @@
                         // 상세 글이 길어도 날짜가 줄바꿈되지 않도록 폭을 고정한다
                         flex: 0 0 156px;
                         white-space: nowrap;
+
+                        // 모바일은 12자 폭으로 좁혀 "2023. 11. ~ / 2024. 02."처럼 두 줄로 접고, 내용 폭을 넓힌다
+                        @media (max-width: 768px) {
+                            flex-basis: 12ch;
+                            white-space: normal;
+                        }
                         font-family: var(--mono);
                         font-size: 12px;
                         line-height: normal;

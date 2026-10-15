@@ -81,9 +81,15 @@
 
                     .category-title {
                         font-family: var(--mono);
+                        min-width: 0;
                         font-size: 20px;
-                        line-height: 0;
+                        line-height: 1.4;
                         font-weight: 700;
+
+                        // 좁은 화면에서도 아이콘·제목이 겹치지 않고 한 줄에 들어오게 줄인다
+                        @media (max-width: 480px) {
+                            font-size: 16px;
+                        }
 
                         &::before {
                             content: "// ";
