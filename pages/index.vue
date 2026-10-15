@@ -93,7 +93,17 @@
     import AOS from "aos"
     import "aos/dist/aos.css"
 
-    useHead({ htmlAttrs: { lang: "ko" } })
+    useHead({
+        htmlAttrs: { lang: "ko" },
+        link: [
+            { rel: "preconnect", href: "https://fonts.googleapis.com" },
+            { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+            {
+                rel: "stylesheet",
+                href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap",
+            },
+        ],
+    })
     useSeoMeta({
         title: "HAM HYUN JUN | Front-End Developer",
         description: "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다.",
@@ -646,9 +656,7 @@
                     // 글자가 아래에서 위로 한 글자씩 올라오는 진입 효과
                     .board-char {
                         display: inline-block;
-                        // 두 줄 모두 속이 빈 아웃라인
-                        color: transparent;
-                        -webkit-text-stroke: 1.5px var(--white);
+                        color: var(--white);
                         animation: char-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
                         animation-delay: calc(var(--i) * 70ms + 150ms);
                     }

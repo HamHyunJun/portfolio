@@ -9,7 +9,7 @@
 ## Key Files
 | File | Description |
 |------|-------------|
-| `scss/main.scss` | 전역 진입점. `:root` 색상·라운드 CSS 변수, 폰트(Pretendard), body 다크 배경 |
+| `scss/main.scss` | 전역 진입점. `:root` 색상·라운드 CSS 변수, 폰트(JetBrains Mono, 한글은 시스템 폰트로 대체), body 다크 배경 |
 | `scss/normalize.scss` | 리셋 |
 | `scss/icons.scss` | `generateIcon` mixin + `.icon`(mask 기반, `currentColor`) 및 아이콘별 클래스 |
 | `images/icons/icon_*.svg` | awards, books, code, education, plus, tool, work |

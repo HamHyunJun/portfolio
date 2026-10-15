@@ -13,7 +13,7 @@
     --blue: #79c0ff;
     --purple: #d2a8ff;
     --orange: #ffa657;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
     --rounded: 14px;
     --rounded-2xs: 4px;
@@ -25,7 +25,8 @@
 }
 
 * > * {
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    // JetBrains Mono에 한글 글리프가 없어 한글은 뒤의 폰트로 대체된다
+    font-family: "JetBrains Mono", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
         Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     line-height: 140%;
