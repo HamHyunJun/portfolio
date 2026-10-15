@@ -2,6 +2,8 @@
 
 프론트엔드 개발자 함현준의 개인 포트폴리오 사이트입니다. 다크 테마의 단일 페이지(Home → About → Skills → Works → Contact)로, 경력과 기술 스택, 직접 만든 프로젝트를 소개합니다.
 
+배포 주소: https://hyunjun-portfolio-three.vercel.app/
+
 ## 기술 스택
 
 | 구분 | 사용 기술 |
