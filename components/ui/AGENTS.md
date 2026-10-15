@@ -19,7 +19,7 @@
 - 새 컴포넌트는 `UI` 접두사 유지.
 
 ### Testing Requirements
-- `yarn dev`로 수동 확인.
+- `pnpm dev`로 수동 확인.
 
 ## Dependencies
 

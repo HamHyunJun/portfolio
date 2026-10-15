@@ -19,7 +19,7 @@
 - DOM 의존 코드(AOS, observer, Lenis)는 클라이언트 훅(`onMounted`)에서만 실행.
 
 ### Testing Requirements
-- `yarn dev` 후 스크롤 시 aside 활성 표시와 섹션 이동 확인.
+- `pnpm dev` 후 스크롤 시 aside 활성 표시와 섹션 이동 확인.
 
 ## Dependencies
 

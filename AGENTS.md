@@ -3,7 +3,7 @@
 **Generated:** 2026-10-14 · **Updated:** 2026-10-14
 
 ## Purpose
-Nuxt 3 기반 개인 포트폴리오 사이트(다크 테마, 단일 페이지: Home → About → Skills → Works). AOS, Embla Carousel 사용. 패키지 매니저는 yarn.
+Nuxt 3 기반 개인 포트폴리오 사이트(다크 테마, 단일 페이지: Home → About → Skills → Works). AOS, Embla Carousel 사용. 패키지 매니저는 pnpm.
 
 ## Key Files
 | File | Description |
@@ -35,7 +35,7 @@ Nuxt 3 기반 개인 포트폴리오 사이트(다크 테마, 단일 페이지: 
 - ref/computed/onMounted 등은 Nuxt auto-import 사용(명시 import 불필요).
 
 ### Testing Requirements
-- 테스트 러너 없음. `yarn build`로 빌드/타입 확인, `yarn dev`(포트 3004)로 수동 확인.
+- 테스트 러너 없음. `pnpm build`로 빌드/타입 확인, `pnpm dev`(포트 3004)로 수동 확인.
 
 ### Common Patterns
 - 섹션 컴포넌트 `Main*`이 `pages/index.vue`에서 props로 데이터를 받음.
