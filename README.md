@@ -22,6 +22,12 @@
 - 모두 CSS `@keyframes`와 `animation-delay`(`--i`, `--n` 변수)로만 구현했고 JS는 쓰지 않습니다.
 - `prefers-reduced-motion`이 켜져 있으면 애니메이션을 끕니다.
 
+### 모션
+- 히어로: 커서를 따라다니는 스포트라이트와 점 격자 하이라이트, `< Front-End />` 라벨의 단어 롤링, 이름이 코드 기호로 깜빡이다 해독되는 효과(진입 시와 hover 시).
+- 히어로 아래 기술 이름 마키(두 줄, 반대 방향), 화면 상단 스크롤 진행 막대.
+- Skills·Contact 카드는 커서를 따라오는 글로우(`utils/glow.ts`), 섹션 내용은 AOS로 스크롤 시 등장합니다.
+- `prefers-reduced-motion`이 켜져 있으면 모든 모션을 끕니다.
+
 ### 에디터 레이아웃 (Aside · Tabs · StatusBar)
 - VS Code처럼 좌측 파일 탐색기(`about.md`, `skills.json`, `works.tsx`), 상단 탭, 줄 번호, 하단 상태바로 구성했습니다.
 - 줄 번호는 `ResizeObserver`로 에디터 높이를 재서 개수를 정하고, 상태바의 `Ln N`은 스크롤 위치에서 계산합니다.

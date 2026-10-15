@@ -1,8 +1,16 @@
 <template>
     <div class="skill">
         <MainSectionTitle title="SKILLS" no="02" />
-        <div class="skill-contents">
-            <div v-for="(skill, index) in skillData" :key="index" class="skill-content">
+        <div
+            class="skill-contents"
+            @pointermove="trackGlow($event, '.content-detail-wrap')"
+        >
+            <div
+                v-for="(skill, index) in skillData"
+                :key="index"
+                class="skill-content"
+                data-aos="fade-up"
+            >
                 <div class="content-category-wrap">
                     <i class="icon" :class="categoryIcon(skill.category)"></i>
                     <p class="category-title">{{ skill.category }}</p>
@@ -103,6 +111,8 @@
                         background: var(--gray);
                         border: 1px solid var(--line);
                         border-radius: 6px;
+                        position: relative;
+                        overflow: hidden;
                         transition:
                             transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
                             border-color 0.3s ease,
@@ -116,6 +126,29 @@
                         display: flex;
                         flex-direction: column;
                         gap: 10px;
+
+                        // 커서를 따라오는 글로우
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            inset: 0;
+                            pointer-events: none;
+                            opacity: 0;
+                            background: radial-gradient(
+                                200px circle at var(--mx, 50%) var(--my, 50%),
+                                rgb(63 185 80 / 18%),
+                                transparent 70%
+                            );
+                            transition: opacity 0.3s ease;
+                        }
+
+                        &:hover::before {
+                            opacity: 1;
+                        }
+
+                        > * {
+                            position: relative;
+                        }
 
                         .detail-logo {
                             font-family: var(--mono);
