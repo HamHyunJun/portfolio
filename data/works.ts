@@ -4,6 +4,15 @@ import type { MainWorkData } from "~/structure/user"
 // webImage·appImage는 public/ 기준 경로(예: "/works/a.png")이며, appImage는 앱 화면이 있을 때만 넣는다.
 export const works: MainWorkData[] = [
     {
+        name: "ClaudeBoard",
+        period: "2026. 10.",
+        summary:
+            "로컬에서 돌아가는 여러 Claude Code 세션을 브라우저 한 화면에서 모니터링하고 지시·승인하는 관제 대시보드입니다. 세션별 상태와 진행률, 토큰 사용량을 한 줄씩 보여주고, 승인 대기나 토큰 급증처럼 사람이 개입할 순간만 알립니다.",
+        stack: ["Nuxt 4", "Vue", "TypeScript", "Fastify", "WebSocket", "node-pty", "xterm.js"],
+        webImage: "/works/claudeboard.jpg",
+        links: [{ label: "GitHub", href: "https://github.com/HamHyunJun/ClaudeBoard" }],
+    },
+    {
         name: "TaxKit",
         period: "2026. 10.",
         summary:
