@@ -1,6 +1,6 @@
 <template>
     <div class="about">
-        <MainSectionTitle title="ABOUT ME" />
+        <MainSectionTitle title="ABOUT ME" no="01" />
         <div class="about-contents">
             <div class="contents-title-container">
                 <i class="icon icon-education"></i>
@@ -75,8 +75,14 @@
 
             @media (max-width: 768px) {
                 flex-direction: column;
-                gap: 20px;
+                gap: 12px;
                 padding: 0;
+                // 제목 묶음 사이를 벌려 내용과 다음 제목이 붙어 보이지 않게 한다
+                margin-bottom: 28px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
             }
 
             .contents-title-container {
@@ -85,8 +91,12 @@
                 display: flex;
                 align-items: flex-start;
                 gap: 18px;
-                border-radius: var(--rounded);
-                background: var(--blue-dim);
+
+                @media (max-width: 768px) {
+                    width: auto;
+                    height: auto;
+                    align-items: center;
+                }
 
                 .contents-title {
                     font-size: 18px;
@@ -95,18 +105,44 @@
             }
 
             .contents-desc-container {
+                position: relative;
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 14px;
+                padding-left: 28px;
+                border-left: 1px solid rgb(143 168 255 / 25%);
 
                 .contents-desc-wrap {
                     display: flex;
-                    align-items: center;
+                    position: relative;
+                    align-items: flex-start;
                     gap: 16px;
 
+                    // 타임라인 점
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 6px;
+                        left: -33px;
+                        width: 9px;
+                        height: 9px;
+                        border-radius: 50%;
+                        background: var(--base-background);
+                        border: 2px solid var(--blue);
+                        transition:
+                            background-color 0.25s ease,
+                            transform 0.25s ease;
+                    }
+
+                    &:hover::before {
+                        background: var(--blue);
+                        transform: scale(1.3);
+                    }
+
                     .contents-desc {
-                        border-radius: var(--rounded);
-                        background: var(--blue-dim);
+                        // 상세 글이 길어도 날짜가 줄바꿈되지 않도록 폭을 고정한다
+                        flex: 0 0 150px;
+                        white-space: nowrap;
                         font-size: 13px;
                         font-weight: 600;
                         line-height: normal;
@@ -114,6 +150,8 @@
                     }
 
                     .contents-desc-detail {
+                        min-width: 0;
+                        word-break: keep-all;
                         font-size: 15px;
                         font-weight: 600;
                     }

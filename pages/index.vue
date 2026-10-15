@@ -12,18 +12,20 @@
                 <h1 class="board-name" aria-label="HAM HYUN JUN">
                     <span
                         v-for="(line, row) in nameLines"
-                        :key="line"
+                        :key="row"
                         class="board-line"
                         :class="row ? 'board-title-bottom' : 'board-title-top'"
                         aria-hidden="true"
                     >
-                        <span
-                            v-for="(char, i) in line"
-                            :key="i"
-                            class="board-char"
-                            :style="{ '--i': i + row * 4 }"
-                        >
-                            {{ char === " " ? "\u00A0" : char }}
+                        <span v-for="(word, w) in line" :key="w" class="board-word">
+                            <span
+                                v-for="{ char, i } in word"
+                                :key="i"
+                                class="board-char"
+                                :style="{ '--i': i + row * 4 }"
+                            >
+                                {{ char }}
+                            </span>
                         </span>
                     </span>
                 </h1>
@@ -73,7 +75,15 @@
     let lenisRafId = 0
     let sectionObserver: IntersectionObserver | null = null
 
-    const nameLines = ["HAM", "HYUN JUN"]
+    // 단어 단위로 줄바꿈되도록 단어별로 묶고, 글자 인덱스(공백 포함)는 진입 딜레이용으로 유지
+    const nameLines = ["HAM", "HYUN JUN"].map((line) => {
+        let i = 0
+        return line.split(" ").map((word) => {
+            const chars = [...word].map((char) => ({ char, i: i++ }))
+            i++
+            return chars
+        })
+    })
 
     type SectionKey = "about" | "skill" | "works"
 
@@ -330,14 +340,26 @@
         }
     }
 
+    // 대기 구간을 끝에 둬서 첫 빛줄기가 지연 없이 바로 출발한다
     @keyframes line-streak {
-        0%,
-        40% {
+        0% {
             left: -20%;
         }
 
+        60%,
         100% {
             left: 100%;
+        }
+    }
+
+    @keyframes line-streak-reverse {
+        0% {
+            left: 100%;
+        }
+
+        60%,
+        100% {
+            left: -20%;
         }
     }
 
@@ -366,6 +388,10 @@
             &.main-board {
                 height: 100vh;
                 margin: auto 0;
+                background:
+                    radial-gradient(60% 50% at 85% 10%, rgb(143 168 255 / 14%), transparent 70%),
+                    radial-gradient(50% 40% at 5% 95%, rgb(143 168 255 / 8%), transparent 70%),
+                    var(--base-background);
                 position: sticky;
                 top: 10px;
 
@@ -376,13 +402,23 @@
                     overflow: hidden;
                     pointer-events: none;
 
+                    // 가장자리로 갈수록 옅어지는 점 격자
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        background: radial-gradient(rgb(255 255 255 / 12%) 1px, transparent 1px)
+                            0 0 / 32px 32px;
+                        mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent);
+                    }
+
                     span {
                         position: absolute;
                         left: 0;
                         width: 100%;
                         height: 1px;
                         overflow: hidden;
-                        background: rgb(255 255 255 / 10%);
+                        background: rgb(143 168 255 / 18%);
                         animation: line-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
                         animation-delay: calc(var(--n) * 150ms);
 
@@ -394,7 +430,7 @@
                             height: 100%;
                             background: linear-gradient(90deg, transparent, rgb(255 255 255 / 55%));
                             animation: line-streak 7s ease-in-out infinite;
-                            animation-delay: calc(var(--n) * 1.4s + 1.8s);
+                            animation-delay: calc(var(--n) * 0.25s + 0.7s);
                             left: -20%;
                         }
 
@@ -402,7 +438,13 @@
                             --dir: -1;
 
                             &::after {
-                                animation-direction: reverse;
+                                animation-name: line-streak-reverse;
+                                // 오른쪽→왼쪽으로 갈 때는 밝은 머리가 왼쪽, 꼬리가 오른쪽
+                                background: linear-gradient(
+                                    270deg,
+                                    transparent,
+                                    rgb(255 255 255 / 55%)
+                                );
                             }
                         }
                     }
@@ -426,8 +468,23 @@
                         overflow: hidden;
                     }
 
+                    .board-word {
+                        display: inline-block;
+                        white-space: nowrap;
+
+                        & + .board-word {
+                            margin-left: 0.25em;
+                        }
+                    }
+
                     .board-title-top {
                         text-align: left;
+
+                        // 윗줄은 속이 빈 아웃라인으로 아랫줄과 무게 대비를 준다
+                        .board-char {
+                            color: transparent;
+                            -webkit-text-stroke: 1.5px var(--white);
+                        }
                     }
 
                     .board-title-bottom {
@@ -447,7 +504,7 @@
                         font-weight: 400;
                         letter-spacing: 0.4em;
                         text-align: right;
-                        color: var(--primary);
+                        color: var(--blue);
                         animation: role-fade 1s ease 1.1s both;
                     }
                 }
@@ -494,7 +551,6 @@
 
                 &.main-about {
                     height: auto;
-                    min-height: 100vh;
                 }
             }
 

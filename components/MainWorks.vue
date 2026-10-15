@@ -1,6 +1,6 @@
 <template>
     <div class="works">
-        <MainSectionTitle title="WORKS" />
+        <MainSectionTitle title="WORKS" no="03" />
         <div v-if="works.length" class="works-content">
             <UICarousel class="carousel" @change="selectedIndex = $event">
                 <UICarouselSlide
@@ -427,12 +427,12 @@
                 transform: none;
             }
 
-            // 좁은 카드에서도 폰 화면이 작아지지 않도록 앱 화면이 있는 카드는 정사각형으로 키우고, 탭 아래로 내린다
-            .slide-media.has-app .media-stage {
-                aspect-ratio: 1;
+            // 웹/앱 카드 모두 같은 비율로 맞춰 카드 높이를 통일한다. 4:3이면 웹 화면은 좌우만 조금 잘리고, 폰 화면도 너무 작아지지 않는다
+            .slide-media .media-stage {
+                aspect-ratio: 4 / 3;
 
                 .media-layer-app {
-                    padding-top: 52px;
+                    padding-top: 44px;
                 }
             }
         }

@@ -1,6 +1,6 @@
 <template>
     <nav v-if="contacts.length" class="contact" aria-label="연락처">
-        <MainSectionTitle title="CONTACT" />
+        <MainSectionTitle title="CONTACT" no="04" />
         <p class="contact-lead">
             함께 만들어 갈 기회를<br />
             기다리고 있어요.
@@ -92,8 +92,8 @@
 
                 &:hover {
                     transform: translateY(-4px);
-                    background: #484848;
-                    border-color: rgb(255 255 255 / 25%);
+                    background: #323850;
+                    border-color: rgb(143 168 255 / 45%);
 
                     &::after {
                         transform: translate(3px, -3px);
