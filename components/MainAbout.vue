@@ -3,17 +3,22 @@
         <MainSectionTitle title="ABOUT ME" no="01" />
         <div class="about-contents" data-aos="fade-up">
             <div class="contents-title-container">
-                <i class="icon icon-education"></i>
-                <h3 class="contents-title">학력</h3>
+                <i class="icon icon-work"></i>
+                <h3 class="contents-title">경력</h3>
             </div>
             <div class="contents-desc-container">
                 <div
-                    v-for="(edu, index) in aboutData.education"
+                    v-for="(work, index) in aboutData.works"
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <span class="contents-desc">{{ edu.date }}</span>
-                    <span class="contents-desc-detail">{{ edu.detail }}</span>
+                    <span class="contents-desc">{{ work.date }}</span>
+                    <div class="contents-desc-body">
+                        <span class="contents-desc-detail">{{ work.detail }}</span>
+                        <ul v-if="work.points?.length" class="contents-points">
+                            <li v-for="point in work.points" :key="point">{{ point }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,17 +40,17 @@
         </div>
         <div class="about-contents" data-aos="fade-up" data-aos-delay="200">
             <div class="contents-title-container">
-                <i class="icon icon-work"></i>
-                <h3 class="contents-title">경력</h3>
+                <i class="icon icon-education"></i>
+                <h3 class="contents-title">학력</h3>
             </div>
             <div class="contents-desc-container">
                 <div
-                    v-for="(work, index) in aboutData.works"
+                    v-for="(edu, index) in aboutData.education"
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <span class="contents-desc">{{ work.date }}</span>
-                    <span class="contents-desc-detail">{{ work.detail }}</span>
+                    <span class="contents-desc">{{ edu.date }}</span>
+                    <span class="contents-desc-detail">{{ edu.detail }}</span>
                 </div>
             </div>
         </div>
@@ -71,9 +76,9 @@
         .about-contents {
             padding: 18px 18px 18px 36px;
             display: flex;
-            gap: 60px;
+            gap: 40px;
 
-            @media (max-width: 768px) {
+            @media (max-width: 1100px) {
                 flex-direction: column;
                 gap: 12px;
                 padding: 0;
@@ -86,13 +91,16 @@
             }
 
             .contents-title-container {
-                width: 200px;
+                // 내용 길이와 상관없이 세 블록의 제목 폭을 같게 고정해 세로선 위치를 맞춘다
+                width: 150px;
+                flex-shrink: 0;
                 height: 70px;
                 display: flex;
                 align-items: flex-start;
-                gap: 18px;
+                gap: 12px;
+                white-space: nowrap;
 
-                @media (max-width: 768px) {
+                @media (max-width: 1100px) {
                     width: auto;
                     height: auto;
                     align-items: center;
@@ -106,6 +114,12 @@
 
             .contents-desc-container {
                 position: relative;
+
+                // 남은 폭을 모두 차지해 글이 길어도 짧아도 세로선 위치가 같다
+                @media (min-width: 1101px) {
+                    flex: 1;
+                    min-width: 0;
+                }
                 display: flex;
                 flex-direction: column;
                 gap: 14px;
@@ -118,7 +132,7 @@
                     align-items: flex-start;
                     gap: 16px;
 
-                    @media (max-width: 768px) {
+                    @media (max-width: 1100px) {
                         gap: 12px;
                     }
 
@@ -149,7 +163,7 @@
                         white-space: nowrap;
 
                         // 모바일은 12자 폭으로 좁혀 "2023. 11. ~ / 2024. 02."처럼 두 줄로 접고, 내용 폭을 넓힌다
-                        @media (max-width: 768px) {
+                        @media (max-width: 1100px) {
                             flex-basis: 12ch;
                             white-space: normal;
                         }
@@ -157,6 +171,39 @@
                         font-size: 12px;
                         line-height: normal;
                         color: var(--green);
+                    }
+
+                    .contents-desc-body {
+                        min-width: 0;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+
+                    .contents-points {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px;
+                        margin: 0;
+                        padding: 0;
+                        list-style: none;
+
+                        li {
+                            position: relative;
+                            padding-left: 16px;
+                            font-size: 13px;
+                            line-height: 160%;
+                            word-break: keep-all;
+                            color: var(--primary);
+
+                            &::before {
+                                content: "›";
+                                position: absolute;
+                                left: 0;
+                                font-family: var(--mono);
+                                color: var(--green);
+                            }
+                        }
                     }
 
                     .contents-desc-detail {

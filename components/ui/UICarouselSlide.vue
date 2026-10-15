@@ -14,7 +14,7 @@
         box-sizing: border-box;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
         .embla__slide {
             flex-basis: 90%;
             padding: 20px 10px;

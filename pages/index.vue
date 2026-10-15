@@ -1,6 +1,10 @@
 <template>
     <main class="main-page">
         <div ref="progressRef" class="progress" aria-hidden="true"></div>
+        <header class="print-head" aria-hidden="true">
+            <p class="print-name">HAM HYUN JUN</p>
+            <p class="print-role">Front-End Developer</p>
+        </header>
         <section class="section main-board" @pointermove="onBoardMove">
             <div class="board-glow" aria-hidden="true"></div>
             <div class="board-lines" aria-hidden="true">
@@ -65,7 +69,6 @@
                 </div>
             </div>
         </section>
-        <MainMarquee :items="stackNames" />
         <div class="main-contents">
             <MainAside
                 class="main-aside"
@@ -217,8 +220,6 @@
             { date: "2021. 02.", detail: "오산대학교 스마트IT과 졸업" },
         ],
         awards: [
-            { date: "2017. 06.", detail: "Mos PowerPoint 2급" },
-            { date: "2017. 06.", detail: "Mos Exel 2급" },
             {
                 date: "2017. 11.",
                 detail: "대학생 디지털 솔루션 챌린지(K-Hackathon) 워크숍 우수상 수상",
@@ -228,10 +229,41 @@
             { date: "2020. 11.", detail: "교내 창업 아이디어 경진대회 우수상 수상" },
         ],
         works: [
-            { date: "2020. 12. ~ 2022. 03.", detail: "중외정보기술 S&P 사업팀 근무" },
-            { date: "2022. 03. ~ 2023. 08.", detail: "아이오비 플랫폼 개발팀 근무" },
-            { date: "2023. 11. ~ 2024. 02.", detail: "오케스트로 Platform Dev3팀 근무" },
-            { date: "2024. 04. ~", detail: "크리에이블 개발팀 근무중" },
+            {
+                date: "2020. 12. ~ 2022. 03.",
+                detail: "중외정보기술 S&P 사업팀 근무",
+                points: [
+                    "제주 5G 기반 스마트 노인복지 신사업 현장 운영 및 인프라 관리",
+                    "복지 IoT 디바이스 모니터링 및 주기적인 원격 데이터 정합성 검증",
+                    "장애 징후 선제 대응 및 기기 유지보수를 통해 서비스 운영 안정성 확보",
+                ],
+            },
+            {
+                date: "2022. 03. ~ 2023. 08.",
+                detail: "아이오비 플랫폼 개발팀 근무",
+                points: [
+                    "복잡한 건강 측정 결과 및 테스트 데이터를 직관적인 수치 지표와 인터랙티브 테이블로 시각화",
+                    "시스템 실행 로그 조회 및 모니터링 뷰를 구현해 데이터 추적성 및 관리 효율성 개선",
+                ],
+            },
+            {
+                date: "2023. 11. ~ 2024. 02.",
+                detail: "오케스트로 Platform Dev3팀 근무",
+                points: [
+                    "엔터프라이즈 B2B 클라우드/인프라 관리 플랫폼 대시보드 프론트엔드 운영 및 고도화",
+                    "고객사별 요구사항에 맞춘 커스텀 위젯 및 대시보드 UI 모듈화 구조 설계",
+                    "반복적인 SI성 커스터마이징 비용을 절감할 수 있도록 화면 설정 및 데이터 매핑 로직 표준화",
+                ],
+            },
+            {
+                date: "2024. 04. ~",
+                detail: "크리에이블 개발팀 근무중",
+                points: [
+                    "자사 주요 서비스(짤스튜디오, 고고고, 사운드 아카이브) 프론트엔드 개발",
+                    "신규 사용자 유입을 위한 고전환 랜딩 페이지 및 프로모션 이벤트 페이지 구현",
+                    "레거시 UI 리뉴얼과 컴포넌트 리팩토링을 진행해 코드 재사용성 및 렌더링 성능 최적화",
+                ],
+            },
         ],
     }))
 
@@ -241,28 +273,32 @@
             data: [
                 {
                     name: "TypeScript",
-                    desc: "타입 기반으로 안정적인 컴포넌트와 API 인터페이스를 설계하고 개발했습니다.",
+                    desc:
+                        "자바스크립트에 \"이 값은 숫자, 이 값은 이런 모양의 객체\"라는 타입을 미리 적어, 코드를 실행하기 전에 실수를 잡는 언어입니다. ClaudeBoard에서는 서버와 화면이 주고받는 메시지(세션 상태 5종, 요청·응답 종류 등)를 하나의 공용 타입 파일로 정의해 양쪽이 같은 규칙을 쓰게 했고, 한쪽만 고쳐서 생기는 불일치를 빌드 단계에서 막았습니다. .vue 파일까지 vue-tsc로 타입 검사했습니다.",
                     logoText: "TS",
                     logoColor: "#002AB5",
                     logoBackground: "#97ABEF",
                 },
                 {
                     name: "JavaScript",
-                    desc: "ES6+ 문법을 활용하여 동적인 UI와 비즈니스 로직을 구현했습니다.",
+                    desc:
+                        "브라우저에서 실행되는 로직을 직접 작성했습니다. TaxKit은 업로드한 엑셀을 서버로 보내지 않고 브라우저 안에서 읽고 계산해 통장 거래와 세금계산서를 대조하고, 이 포트폴리오는 별도 라이브러리 없이 IntersectionObserver(화면에 보이는 구간 감지)와 ResizeObserver(크기 변화 감지) 같은 브라우저 내장 기능으로 스크롤 연동 메뉴와 줄 번호를 구현했습니다.",
                     logoText: "JS",
                     logoColor: "#4A3F00",
                     logoBackground: "#C5AD1C",
                 },
                 {
                     name: "HTML5",
-                    desc: "시맨틱 마크업을 기반으로 접근성과 SEO를 고려한 화면을 구성했습니다.",
+                    desc:
+                        "div만 쓰지 않고 nav, main, section, article 같은 의미 있는 태그로 문서 구조를 잡아, 스크린 리더(화면을 음성으로 읽어 주는 프로그램)와 검색 엔진이 구조를 이해하게 했습니다. 펼침 버튼에는 aria-expanded, 선택 버튼에는 aria-pressed를 달아 상태를 음성으로도 알리고, 마우스 없이 Tab 키만으로 모든 기능을 쓸 수 있게 했습니다.",
                     logoText: "HT",
                     logoColor: "#850000",
                     logoBackground: "#F39393",
                 },
                 {
                     name: "CSS3",
-                    desc: "반응형 레이아웃과 다양한 애니메이션 및 스타일을 구현했습니다.",
+                    desc:
+                        "화면 폭에 따라 배치가 바뀌는 반응형 레이아웃을 Grid, Flexbox, 미디어 쿼리로 만들었습니다. 색과 간격은 CSS 변수로 한곳에 모아 테마를 한 번에 바꿀 수 있게 했고, 이 포트폴리오의 타이핑·글자 등장 효과는 자바스크립트 없이 CSS 애니메이션만으로 구현했습니다. 움직임을 줄여 달라는 사용자 설정(prefers-reduced-motion)이 켜져 있으면 애니메이션을 끕니다.",
                     logoText: "CS",
                     logoColor: "#002AB5",
                     logoBackground: "#97ABEF",
@@ -274,56 +310,64 @@
             data: [
                 {
                     name: "Vue.js",
-                    desc: "Composition API를 활용하여 재사용 가능한 컴포넌트를 설계하고 개발했습니다.",
+                    desc:
+                        "Composition API(<script setup>)로 화면 로직을 composable이라는 함수 단위로 나눠 작성했습니다. 예를 들어 TaxKit은 엑셀 읽기, 거래 대사, 위험 거래 탐지, 독촉 문구 생성을 각각 별도 파일로 분리해 화면 컴포넌트는 보여 주는 일만 하고, 계산 로직은 따로 테스트할 수 있게 했습니다.",
                     logoText: "VU",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
                 },
                 {
                     name: "Nuxt.js",
-                    desc: "Nuxt 3·4의 SSR과 파일 기반 라우팅으로 웹 서비스를 개발하고 SEO를 최적화했습니다.",
+                    desc:
+                        "Vue 기반 프레임워크로, 폴더 구조가 곧 페이지 주소가 됩니다. 서버 렌더링(서버가 완성된 HTML을 미리 만들어 보내는 방식)을 쓴 MoaCook과 이 포트폴리오는 첫 화면이 빠르고 검색 엔진도 내용을 읽을 수 있으며, 앱으로 포장하거나 정적 배포하는 ClaudeBoard, TaxKit, Camping&Joy는 브라우저에서만 도는 SPA로 구성했습니다. MoaCook에서는 Nuxt 서버 API로 레시피 등록, 검색, 이미지 업로드를 직접 만들었습니다.",
                     logoText: "NX",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
                 },
                 {
                     name: "Pinia",
-                    desc: "전역 상태를 관리하고 컴포넌트 간 데이터 흐름을 효율적으로 구성했습니다.",
+                    desc:
+                        "여러 화면이 함께 쓰는 데이터를 한곳(스토어)에서 관리하는 Vue의 상태 관리 도구입니다. Camping&Joy에서 캠핑 일정(camp)과 장비 목록(gear) 스토어를 나눠 모든 화면이 같은 데이터를 보게 했고, persistedstate 플러그인으로 새로고침하거나 앱을 껐다 켜도 입력한 내용이 남도록 했습니다.",
                     logoText: "PI",
                     logoColor: "#4A3F00",
                     logoBackground: "#C5AD1C",
                 },
                 {
                     name: "Tailwind CSS",
-                    desc: "Utility-First 방식으로 반응형 UI를 빠르게 구현했습니다.",
+                    desc:
+                        "HTML 클래스에 flex, p-4, text-sm 같은 짧은 유틸리티 클래스를 조합해 스타일을 지정하는 방식입니다. CSS 파일을 오가지 않고 마크업 안에서 간격, 색, 반응형(md: 등)을 바로 정할 수 있어, 반복되는 화면을 빠르게 구현했습니다.",
                     logoText: "TW",
                     logoColor: "#073B8B",
                     logoBackground: "#94AFD9",
                 },
                 {
                     name: "SCSS",
-                    desc: "변수, 믹스인, 중첩 문법을 활용하여 유지보수가 쉬운 스타일을 작성했습니다.",
+                    desc:
+                        "CSS에 중첩, 변수, 믹스인(재사용하는 스타일 묶음)을 더한 문법입니다. 컴포넌트마다 scoped로 스타일 범위를 가둬 다른 화면에 영향이 번지지 않게 했고, TaxKit, ClaudeBoard, Camping&Joy에서 공통 스타일을 믹스인으로 묶어 재사용했습니다.",
                     logoText: "SC",
                     logoColor: "#850000",
                     logoBackground: "#F39393",
                 },
                 {
                     name: "Supabase",
-                    desc: "DB와 백엔드를 Supabase로 구성해 Camping&Joy, MoaCook을 개발했습니다.",
+                    desc:
+                        "서버를 직접 만들지 않고 Supabase(PostgreSQL 데이터베이스와 파일 저장소)를 백엔드로 썼습니다. Camping&Joy는 DB 구조 변경 이력을 남기는 마이그레이션 SQL 3개와 행 단위 접근 규칙(RLS)을 작성해 공유 캠핑 일정을 저장했고, MoaCook은 서버 API에서 서비스 키로 접속해 레시피 데이터와 이미지(저장소 버킷)를 관리했습니다.",
                     logoText: "SB",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
                 },
                 {
                     name: "Capacitor",
-                    desc: "Nuxt 웹 서비스를 Android·iOS 앱으로 패키징해 배포했습니다.",
+                    desc:
+                        "웹으로 만든 서비스를 거의 그대로 Android·iOS 앱으로 포장하는 도구입니다. Camping&Joy는 인터넷이 약한 캠핑장에서도 열리도록 정적 파일을 앱 안에 넣고, 파일 저장·공유 플러그인으로 결과 이미지를 기기에 저장하고 공유하게 했습니다. MoaCook은 Android APK와 iOS PWA(홈 화면에 추가해 쓰는 웹앱)로 제공합니다.",
                     logoText: "CP",
                     logoColor: "#073B8B",
                     logoBackground: "#94AFD9",
                 },
                 {
                     name: "ECharts",
-                    desc: "데이터를 시각화하는 차트와 대시보드를 구현했습니다.",
+                    desc:
+                        "데이터를 막대, 선, 원형 같은 차트로 그려 주는 시각화 라이브러리입니다. 숫자만 나열하면 비교하기 어려운 데이터를 차트와 대시보드로 보여 줘서, 변화와 이상 구간을 한눈에 파악하게 했습니다.",
                     logoText: "EC",
                     logoColor: "#7F0048",
                     logoBackground: "#F28DC6",
@@ -335,35 +379,40 @@
             data: [
                 {
                     name: "GitHub",
-                    desc: "Git Flow 기반으로 버전 관리 및 협업을 진행했습니다.",
+                    desc:
+                        "Git으로 변경 이력을 남기고 GitHub으로 협업했습니다. 이 포트폴리오처럼 dev 브랜치에서 작업한 뒤 Pull Request(코드 검토를 요청하는 병합 요청)로 master에 합치는 Git Flow 방식으로 운영해, 작업 중인 코드가 운영 코드를 건드리지 않게 했습니다. 커밋 메시지에는 무엇을 왜 바꿨는지 한국어로 적었습니다.",
                     logoText: "GH",
                     logoColor: "#663005",
                     logoBackground: "#D2A480",
                 },
                 {
                     name: "Figma",
-                    desc: "디자이너와 협업하며 디자인 시안을 기반으로 화면을 구현했습니다.",
+                    desc:
+                        "디자이너가 전달한 Figma 시안에서 간격, 색, 글자 크기, 컴포넌트 구조를 직접 확인해 시안과 같은 화면을 구현했습니다.",
                     logoText: "FG",
                     logoColor: "#730673",
                     logoBackground: "#DB96DB",
                 },
                 {
                     name: "Claude Code (LLM)",
-                    desc: "LLM 에이전트를 개발 워크플로에 활용하고, MCP 기반 도구(Inspector-Agent)를 직접 만들었습니다.",
+                    desc:
+                        "Claude Code(터미널에서 쓰는 AI 코딩 도구)를 개발 전반에 활용했습니다. 프로젝트마다 CLAUDE.md에 코딩·언어 규칙을 적어 AI가 일관되게 작업하게 했고, oh-my-claudecode, ponytail, frontend-design 같은 스킬과 플러그인을 상황에 맞게 골라 썼습니다. 또 AI가 브라우저의 깨진 레이아웃을 직접 측정하도록 MCP(AI에 외부 도구를 연결하는 표준 규격) 서버 Inspector-Agent를 만들었습니다.",
                     logoText: "AI",
                     logoColor: "#730673",
                     logoBackground: "#DB96DB",
                 },
                 {
                     name: "Vercel",
-                    desc: "Nuxt 서비스를 Vercel에 배포하고 프리뷰·운영 환경을 관리했습니다.",
+                    desc:
+                        "GitHub에 코드를 올리면 자동으로 빌드하고 배포해 주는 호스팅 서비스입니다. TaxKit, Camping&Joy, MoaCook을 Vercel로 배포해 서비스 주소를 운영했고, MoaCook은 서버 함수 지역을 서울(icn1)로 지정해 DB와 사용자 모두에게 가깝게 했습니다. 프리뷰 배포와 운영 배포를 나눠 관리했습니다.",
                     logoText: "VC",
                     logoColor: "#663005",
                     logoBackground: "#D2A480",
                 },
                 {
                     name: "Vite",
-                    desc: "빠른 개발 서버와 빌드 환경을 활용하여 프로젝트를 구성했습니다.",
+                    desc:
+                        "빠른 개발 서버이자 번들러(여러 파일을 하나로 묶는 도구)입니다. Inspector-Agent에서는 Vite 플러그인을 직접 만들어, 빌드할 때 .vue 파일을 분석(@vue/compiler-sfc, @babel/parser)하고 각 화면 요소에 data-ia-src라는 속성으로 \"몇 번째 파일 몇 번째 줄\" 위치를 심었습니다. 그래서 브라우저에서 깨진 요소를 찾으면 소스 위치로 바로 연결됩니다.",
                     logoText: "VI",
                     logoColor: "#0121C2",
                     logoBackground: "#9FABE3",
@@ -371,9 +420,6 @@
             ],
         },
     ])
-
-    // 마키에 흘려 보낼 기술 이름 (스킬 데이터에서 그대로 가져온다)
-    const stackNames = computed(() => skillData.value.flatMap((c) => c.data.map((d) => d.name)))
 
     // 히어로 라벨에서 순서대로 바뀌는 단어. 끝의 첫 단어 복사본이 무한 루프를 이어 준다
     const tickerWords = ["Front-End", "Vue", "Nuxt", "TypeScript", "Front-End"]
@@ -605,6 +651,11 @@
     }
 
     .main-page {
+        // PDF(인쇄)에서만 보이는 머리글
+        .print-head {
+            display: none;
+        }
+
         // 상단 스크롤 진행 막대
         .progress {
             position: fixed;
@@ -911,7 +962,7 @@
             }
 
             &.main-about {
-                height: 100vh;
+                min-height: 100vh;
             }
 
             &.main-contact:not(:has(*)) {
@@ -979,6 +1030,23 @@
 
         // 하단 고정 상태바가 마지막 내용을 가리지 않게 한다
         padding-bottom: 26px;
+
+        // 탐색기가 보이는 좁은 폭(태블릿)에서는 여백·탐색기·줄 번호를 줄여 가로 스크롤을 막는다
+        @media (max-width: 1100px) {
+            .section:not(.main-board) {
+                padding: 80px 32px;
+            }
+
+            .main-contents {
+                .main-aside {
+                    width: 200px;
+                }
+
+                .main-editor .gutter {
+                    display: none;
+                }
+            }
+        }
 
         @media (max-width: 768px) {
             .section {

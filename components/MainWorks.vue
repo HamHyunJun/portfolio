@@ -1,122 +1,158 @@
 <template>
     <div class="works">
         <MainSectionTitle title="WORKS" no="03" />
-        <div v-if="works.length" class="works-content">
-            <UICarousel class="carousel" @change="selectedIndex = $event">
-                <UICarouselSlide
-                    v-for="(work, index) in works"
-                    :key="work.name"
-                    class="carousel-slide"
-                >
-                    <article class="slide-container" :class="{ active: index === selectedIndex }">
-                        <div
-                            v-if="work.webImage"
-                            class="slide-media"
-                            :class="{ 'has-app': work.appImage }"
+        <div v-if="groups.length" class="works-groups">
+            <section v-for="group in groups" :key="group.key" class="works-group">
+                <h3 class="group-title">{{ group.title }}</h3>
+                <div class="works-content">
+                    <UICarousel
+                        :ref="(el) => (carousels[group.key] = el as Carousel | null)"
+                        class="carousel"
+                        @change="selectedIndexes[group.key] = $event"
+                    >
+                        <UICarouselSlide
+                            v-for="(work, index) in group.items"
+                            :key="work.name"
+                            class="carousel-slide"
                         >
-                            <div class="media-stage">
-                                <div class="media-layer" :class="{ show: viewOf(work) === 'web' }">
-                                    <img
-                                        :src="work.webImage"
-                                        :alt="`${work.name} 웹 화면`"
-                                        :aria-hidden="viewOf(work) !== 'web'"
-                                        loading="lazy"
-                                        decoding="async"
-                                        class="slide-image"
-                                    />
-                                </div>
+                            <article
+                                class="slide-container"
+                                :class="{ active: index === (selectedIndexes[group.key] ?? 0) }"
+                                @click="onCardClick($event, group.key, index)"
+                            >
                                 <div
-                                    v-if="work.appImage"
-                                    class="media-layer media-layer-app"
-                                    :class="{ show: viewOf(work) === 'app' }"
+                                    v-if="work.webImage"
+                                    class="slide-media"
+                                    :class="{ 'has-app': work.appImage }"
                                 >
-                                    <img
-                                        :src="work.appImage"
-                                        :alt="`${work.name} 앱 화면`"
-                                        :aria-hidden="viewOf(work) !== 'app'"
-                                        loading="lazy"
-                                        decoding="async"
-                                        class="slide-image-app"
-                                    />
-                                </div>
-                            </div>
-                            <div v-if="work.appImage" class="media-tabs" role="group" aria-label="화면 종류">
-                                <button
-                                    v-for="view in views"
-                                    :key="view"
-                                    type="button"
-                                    class="media-tab"
-                                    :class="{ active: viewOf(work) === view }"
-                                    :aria-pressed="viewOf(work) === view"
-                                    @click="viewMap[work.name] = view"
-                                >
-                                    {{ view.toUpperCase() }}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="slide-body">
-                            <button
-                                :id="`work-toggle-${index}`"
-                                type="button"
-                                class="slide-toggle"
-                                :aria-expanded="isOpen"
-                                :aria-controls="`work-panel-${index}`"
-                                @click="isOpen = !isOpen"
-                            >
-                                <span class="toggle-text">
-                                    <span class="toggle-period">{{ work.period }}</span>
-                                    <span class="toggle-title">{{ work.name }}</span>
-                                </span>
-                                <i class="icon icon-plus" :class="{ open: isOpen }"></i>
-                            </button>
-                            <div
-                                :id="`work-panel-${index}`"
-                                class="slide-panel"
-                                :class="{ open: isOpen }"
-                                role="region"
-                                :aria-labelledby="`work-toggle-${index}`"
-                                :inert="!isOpen"
-                            >
-                                <div class="panel-inner">
-                                    <p class="panel-summary">{{ work.summary }}</p>
-                                    <ul class="panel-stack" aria-label="사용 기술">
-                                        <li v-for="tech in work.stack" :key="tech">{{ tech }}</li>
-                                    </ul>
-                                    <div class="panel-links">
-                                        <a
-                                            v-for="link in work.links"
-                                            :key="link.href"
-                                            :href="link.href"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="panel-link"
+                                    <div class="media-stage">
+                                        <div class="media-layer" :class="{ show: viewOf(work) === 'web' }">
+                                            <img
+                                                :src="work.webImage"
+                                                :alt="`${work.name} 웹 화면`"
+                                                :aria-hidden="viewOf(work) !== 'web'"
+                                                loading="lazy"
+                                                decoding="async"
+                                                class="slide-image"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="work.appImage"
+                                            class="media-layer media-layer-app"
+                                            :class="{ show: viewOf(work) === 'app' }"
                                         >
-                                            {{ link.label }}
-                                        </a>
+                                            <img
+                                                :src="work.appImage"
+                                                :alt="`${work.name} 앱 화면`"
+                                                :aria-hidden="viewOf(work) !== 'app'"
+                                                loading="lazy"
+                                                decoding="async"
+                                                class="slide-image-app"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div v-if="work.appImage" class="media-tabs" role="group" aria-label="화면 종류">
+                                        <button
+                                            v-for="view in views"
+                                            :key="view"
+                                            type="button"
+                                            class="media-tab"
+                                            :class="{ active: viewOf(work) === view }"
+                                            :aria-pressed="viewOf(work) === view"
+                                            @click="viewMap[work.name] = view"
+                                        >
+                                            {{ view.toUpperCase() }}
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </article>
-                </UICarouselSlide>
-            </UICarousel>
+                                <div class="slide-body">
+                                    <button
+                                        :id="`work-toggle-${group.key}-${index}`"
+                                        type="button"
+                                        class="slide-toggle"
+                                        :aria-expanded="!!openMap[group.key]"
+                                        :aria-controls="`work-panel-${group.key}-${index}`"
+                                    >
+                                        <span class="toggle-text">
+                                            <span class="toggle-period">{{ work.period }}</span>
+                                            <span class="toggle-title">{{ work.name }}</span>
+                                        </span>
+                                    </button>
+                                    <div
+                                        :id="`work-panel-${group.key}-${index}`"
+                                        class="slide-panel"
+                                        :class="{ open: openMap[group.key] }"
+                                        role="region"
+                                        :aria-labelledby="`work-toggle-${group.key}-${index}`"
+                                        :inert="!openMap[group.key]"
+                                    >
+                                        <div class="panel-inner">
+                                            <p class="panel-summary">{{ work.summary }}</p>
+                                            <ul class="panel-stack" aria-label="사용 기술">
+                                                <li v-for="tech in work.stack" :key="tech">{{ tech }}</li>
+                                            </ul>
+                                            <ul
+                                                v-if="work.aiTools?.length"
+                                                class="panel-stack panel-ai"
+                                                aria-label="사용한 AI 도구"
+                                            >
+                                                <li v-for="tool in work.aiTools" :key="tool">{{ tool }}</li>
+                                            </ul>
+                                            <div class="panel-links">
+                                                <a
+                                                    v-for="link in work.links"
+                                                    :key="link.href"
+                                                    :href="link.href"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="panel-link"
+                                                >
+                                                    {{ link.label }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </UICarouselSlide>
+                    </UICarousel>
+                </div>
+            </section>
         </div>
         <p v-else class="works-empty">프로젝트를 준비하고 있습니다.</p>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { works } from "~/data/works"
+    import { companyWorks, sideWorks } from "~/data/works"
     import type { MainWorkData } from "~/structure/user"
 
     type MediaView = "web" | "app"
 
     const views: MediaView[] = ["web", "app"]
-    const selectedIndex = ref<number>(0)
-    // 상세창 열림 상태는 카드 전체가 공유해, 넘겨도 열림/닫힘이 유지된다
-    const isOpen = ref<boolean>(false)
+    // 프로젝트가 없는 그룹은 섹션 자체를 숨긴다
+    const groups = [
+        { key: "company", title: "Company Projects", items: companyWorks },
+        { key: "side", title: "Side Projects", items: sideWorks },
+    ].filter((group) => group.items.length)
+
+    // 그룹(캐러셀)마다 선택된 카드 번호
+    const selectedIndexes = reactive<Record<string, number>>({})
+    // 상세창 열림 상태는 그룹 안의 카드가 공유해, 넘겨도 열림/닫힘이 유지된다
+    const openMap = reactive<Record<string, boolean>>({})
     // 카드별 웹/앱 화면 선택. 기본은 웹
     const viewMap = reactive<Record<string, MediaView>>({})
+
+    type Carousel = { scrollTo: (index: number) => void }
+    const carousels: Record<string, Carousel | null> = {}
+
+    // 카드를 누르면 옆 카드는 그쪽으로 넘기고, 가운데 카드는 상세를 펼치거나 접는다
+    const onCardClick = (e: MouseEvent, key: string, index: number): void => {
+        // 링크와 웹/앱 전환 버튼은 자기 동작만 한다
+        if ((e.target as HTMLElement).closest("a, .media-tabs")) return
+        if (index === (selectedIndexes[key] ?? 0)) openMap[key] = !openMap[key]
+        else carousels[key]?.scrollTo(index)
+    }
 
     const viewOf = (work: MainWorkData): MediaView => viewMap[work.name] ?? "web"
 </script>
@@ -135,6 +171,25 @@
             color: var(--primary);
         }
 
+        .works-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 56px;
+
+            .group-title {
+                margin-bottom: 20px;
+                font-family: var(--mono);
+                font-size: 18px;
+                font-weight: 700;
+                color: var(--white);
+
+                &::before {
+                    content: "// ";
+                    color: var(--green);
+                }
+            }
+        }
+
         .works-content {
             .carousel {
                 .carousel-slide {
@@ -146,10 +201,29 @@
                         transform: scale(1);
                         transition:
                             transform 0.4s ease,
-                            border-color 0.4s ease;
+                            border-color 0.4s ease,
+                            box-shadow 0.4s ease;
                         z-index: 0;
                         position: relative;
                         overflow: hidden;
+                        cursor: pointer;
+
+                        // hover: 테두리가 그린으로 밝아지고 화면이 또렷해진다. 옆 카드는 살짝 커지고, 가운데 카드는 그림자가 생긴다
+                        &:hover {
+                            border-color: rgb(63 185 80 / 60%);
+
+                            .slide-media .media-stage {
+                                opacity: 0.85;
+                            }
+                        }
+
+                        &:not(.active):hover {
+                            transform: scale(1.02);
+                        }
+
+                        &.active:hover {
+                            box-shadow: 0 20px 40px -24px rgb(63 185 80 / 45%);
+                        }
 
                         &.active {
                             transform: scale(1.05);
@@ -279,11 +353,6 @@
                             color: var(--white);
                             text-align: left;
                             cursor: pointer;
-                            transition: background-color 0.2s ease;
-
-                            &:hover {
-                                background: rgb(255 255 255 / 5%);
-                            }
 
                             &:focus-visible {
                                 outline: 2px solid var(--white);
@@ -307,15 +376,6 @@
                                 font-size: 26px;
                                 font-weight: 700;
                                 letter-spacing: -0.01em;
-                            }
-
-                            .icon-plus {
-                                flex-shrink: 0;
-                                transition: transform 0.3s ease;
-
-                                &.open {
-                                    transform: rotate(45deg);
-                                }
                             }
                         }
 
@@ -367,6 +427,25 @@
                                     background: var(--base-background);
                                     font-family: var(--mono);
                                     font-size: 12px;
+                                }
+                            }
+
+                            // 기술 스택과 구분되는 AI 도구 줄: 그린 점선 칩 + "AI TOOLS" 라벨
+                            .panel-ai {
+                                align-items: center;
+
+                                &::before {
+                                    content: "AI TOOLS";
+                                    margin-right: 4px;
+                                    font-family: var(--mono);
+                                    font-size: 11px;
+                                    letter-spacing: 0.1em;
+                                    color: var(--primary);
+                                }
+
+                                li {
+                                    border: 1px dashed var(--green);
+                                    color: var(--green);
                                 }
                             }
 

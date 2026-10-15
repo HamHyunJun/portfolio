@@ -23,9 +23,6 @@
 .icon-work {
     @include generateIcon("~/assets/images/icons/icon_work.svg");
 }
-.icon-plus {
-    @include generateIcon("~/assets/images/icons/icon_plus.svg");
-}
 .icon-code {
     @include generateIcon("~/assets/images/icons/icon_code.svg");
 }
