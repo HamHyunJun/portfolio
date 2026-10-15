@@ -23,29 +23,51 @@
         gap: 50px;
 
         .title-divider {
-            height: 2px;
+            height: 1px;
             flex: 1;
-            background: linear-gradient(90deg, var(--gray), rgb(143 168 255 / 35%));
-        }
-
-        .title-divider:first-child {
-            background: linear-gradient(270deg, var(--gray), rgb(143 168 255 / 35%));
+            background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
         }
 
         .title-text {
             margin: 0;
+            font-family: var(--mono);
             font-size: 40px;
             font-weight: 700;
+            letter-spacing: -0.02em;
             flex-shrink: 0;
+
+            // 깜빡이는 터미널 커서
+            &::after {
+                content: "_";
+                color: var(--green);
+                animation: blink 1.1s steps(1) infinite;
+            }
 
             .title-no {
                 display: block;
                 margin-bottom: 6px;
+                font-family: var(--mono);
                 font-size: 13px;
-                font-weight: 600;
-                letter-spacing: 0.2em;
-                color: var(--blue);
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                color: var(--green);
+
+                &::before {
+                    content: "// ";
+                }
             }
+        }
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .section-title-wrap .title-text::after {
+            animation: none;
         }
     }
 

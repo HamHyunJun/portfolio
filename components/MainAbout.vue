@@ -110,7 +110,7 @@
                 flex-direction: column;
                 gap: 14px;
                 padding-left: 28px;
-                border-left: 1px solid rgb(143 168 255 / 25%);
+                border-left: 1px solid var(--line);
 
                 .contents-desc-wrap {
                     display: flex;
@@ -126,27 +126,27 @@
                         left: -33px;
                         width: 9px;
                         height: 9px;
-                        border-radius: 50%;
+                        border-radius: 2px;
                         background: var(--base-background);
-                        border: 2px solid var(--blue);
+                        border: 2px solid var(--green);
                         transition:
                             background-color 0.25s ease,
                             transform 0.25s ease;
                     }
 
                     &:hover::before {
-                        background: var(--blue);
+                        background: var(--green);
                         transform: scale(1.3);
                     }
 
                     .contents-desc {
                         // 상세 글이 길어도 날짜가 줄바꿈되지 않도록 폭을 고정한다
-                        flex: 0 0 150px;
+                        flex: 0 0 156px;
                         white-space: nowrap;
-                        font-size: 13px;
-                        font-weight: 600;
+                        font-family: var(--mono);
+                        font-size: 12px;
                         line-height: normal;
-                        color: var(--blue);
+                        color: var(--green);
                     }
 
                     .contents-desc-detail {

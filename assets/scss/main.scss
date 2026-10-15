@@ -2,13 +2,18 @@
 @use "icons.scss";
 
 :root {
-    // 살짝 푸른 기가 도는 차콜 + 하나의 포인트 컬러(인디고 블루)
-    --primary: #A9B1C6;
-    --base-background: #11131a;
-    --white: #E6E9F2;
-    --gray: #262b3a;
-    --blue: #8fa8ff;
-    --blue-dim: rgb(143 168 255 / 14%);
+    // GitHub 다크 계열 배경 + 터미널 그린 포인트. blue/purple/orange는 코드 하이라이트용
+    --primary: #8b949e;
+    --base-background: #0d1117;
+    --white: #e6edf3;
+    --gray: #161b22;
+    --sidebar: #010409;
+    --line: #30363d;
+    --green: #3fb950;
+    --blue: #79c0ff;
+    --purple: #d2a8ff;
+    --orange: #ffa657;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
     --rounded: 14px;
     --rounded-2xs: 4px;
@@ -35,6 +40,15 @@
     html {
         scroll-padding-bottom: 64px;
     }
+}
+
+html {
+    color-scheme: dark;
+}
+
+::selection {
+    background: rgb(63 185 80 / 35%);
+    color: var(--white);
 }
 
 body {

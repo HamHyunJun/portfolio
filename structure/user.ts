@@ -36,3 +36,13 @@ export interface ContactLink {
     label: string
     href: string
 }
+
+export type SectionKey = "about" | "skill" | "works"
+
+// 탐색기·탭에 파일처럼 표시되는 섹션 항목
+export interface NavFile {
+    key: SectionKey
+    name: string
+    glyph: string
+    color: string
+}
