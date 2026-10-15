@@ -124,9 +124,9 @@
             }
 
             .aside-content {
-                padding: 8px;
+                padding: 8px 6px;
                 border-left: 0;
-                font-size: 12px;
+                font-size: 11px;
 
                 .file-icon {
                     display: none;

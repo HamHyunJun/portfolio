@@ -94,7 +94,7 @@
                         <section ref="worksRef" class="section main-works">
                             <MainWorks />
                         </section>
-                        <section class="section main-contact">
+                        <section ref="contactRef" class="section main-contact">
                             <MainContact />
                         </section>
                     </div>
@@ -108,6 +108,7 @@
 <script setup lang="ts">
     import type { MainAboutData, MainSkillData, NavFile, SectionKey } from "~/structure/user"
     import AOS from "aos"
+    import { contacts } from "~/data/contacts"
     import "aos/dist/aos.css"
 
     useHead({
@@ -132,7 +133,6 @@
 
     let lenis: any
     let lenisRafId = 0
-    let sectionObserver: IntersectionObserver | null = null
     let sizeObserver: ResizeObserver | null = null
     let scrollRafId = 0
 
@@ -191,6 +191,10 @@
         { key: "about", name: "about.md", glyph: "M↓", color: "#79c0ff" },
         { key: "skill", name: "skills.json", glyph: "{}", color: "#e3b341" },
         { key: "works", name: "works.tsx", glyph: "TS", color: "#3178c6" },
+        // 연락처가 비어 있으면 섹션 자체가 렌더링되지 않으므로 파일도 숨긴다
+        ...(contacts.length
+            ? [{ key: "contact", name: "contact.sh", glyph: "SH", color: "#d2a8ff" } as const]
+            : []),
     ]
 
     const LINE_HEIGHT = 24
@@ -205,6 +209,7 @@
     const aboutRef = ref<HTMLElement | null>(null)
     const skillRef = ref<HTMLElement | null>(null)
     const worksRef = ref<HTMLElement | null>(null)
+    const contactRef = ref<HTMLElement | null>(null)
 
     const aboutData = computed<MainAboutData>(() => ({
         education: [
@@ -223,10 +228,10 @@
             { date: "2020. 11.", detail: "교내 창업 아이디어 경진대회 우수상 수상" },
         ],
         works: [
-            { date: "2024. 04. ~", detail: "크리에이블 개발팀 근무중" },
-            { date: "2023. 11. ~ 2024. 02.", detail: "오케스트로 Platform Dev3팀 근무" },
-            { date: "2022. 03. ~ 2023. 08.", detail: "아이오비 플랫폼 개발팀 근무" },
             { date: "2020. 12. ~ 2022. 03.", detail: "중외정보기술 S&P 사업팀 근무" },
+            { date: "2022. 03. ~ 2023. 08.", detail: "아이오비 플랫폼 개발팀 근무" },
+            { date: "2023. 11. ~ 2024. 02.", detail: "오케스트로 Platform Dev3팀 근무" },
+            { date: "2024. 04. ~", detail: "크리에이블 개발팀 근무중" },
         ],
     }))
 
@@ -377,6 +382,7 @@
         about: aboutRef,
         skill: skillRef,
         works: worksRef,
+        contact: contactRef,
     } as const
 
     const scrollToSection = (key: SectionKey): void => {
@@ -393,7 +399,6 @@
     onBeforeUnmount(() => {
         lenis?.destroy()
         cancelAnimationFrame(lenisRafId)
-        sectionObserver?.disconnect()
         sizeObserver?.disconnect()
         cancelAnimationFrame(scrollRafId)
         window.removeEventListener("scroll", onScroll)
@@ -435,11 +440,27 @@
         })
     }
 
+    // 화면 상단 20% 선을 지난 마지막 섹션이 활성. 연락처는 짧아서 선에 닿지 못하므로 페이지 끝이면 활성
+    const updateActiveSection = (): void => {
+        const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+        if (atBottom && contactRef.value) {
+            activeSection.value = "contact"
+            return
+        }
+        let current: SectionKey | null = null
+        for (const key of ["about", "skill", "works"] as const) {
+            const el = sectionRefs[key].value
+            if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.2) current = key
+        }
+        activeSection.value = current
+    }
+
     // 스크롤 위치를 에디터의 "Ln N"으로 환산해 상태바에 보여 준다
     const onScroll = (): void => {
         cancelAnimationFrame(scrollRafId)
         scrollRafId = requestAnimationFrame(() => {
             line.value = Math.floor(window.scrollY / LINE_HEIGHT) + 1
+            updateActiveSection()
             const max = document.documentElement.scrollHeight - window.innerHeight
             progressRef.value?.style.setProperty(
                 "transform",
@@ -469,24 +490,7 @@
             lenisRafId = requestAnimationFrame(lenisRaf)
         })
 
-        const sectionMap = new Map<Element, SectionKey>([
-            [aboutRef.value as Element, "about"],
-            [skillRef.value as Element, "skill"],
-            [worksRef.value as Element, "works"],
-        ])
-
-        sectionObserver = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        activeSection.value = sectionMap.get(entry.target) ?? null
-                    }
-                })
-            },
-            { rootMargin: "-20% 0px -75% 0px" }
-        )
-
-        sectionMap.forEach((_key, el) => el && sectionObserver?.observe(el))
+        updateActiveSection()
     })
 
     const ensureLenis = (): Promise<void> =>

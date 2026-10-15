@@ -29,7 +29,7 @@
 - `prefers-reduced-motion`이 켜져 있으면 모든 모션을 끕니다.
 
 ### 에디터 레이아웃 (Aside · Tabs · StatusBar)
-- VS Code처럼 좌측 파일 탐색기(`about.md`, `skills.json`, `works.tsx`), 상단 탭, 줄 번호, 하단 상태바로 구성했습니다.
+- VS Code처럼 좌측 파일 탐색기(`about.md`, `skills.json`, `works.tsx`, `contact.sh`), 상단 탭, 줄 번호, 하단 상태바로 구성했습니다.
 - 줄 번호는 `ResizeObserver`로 에디터 높이를 재서 개수를 정하고, 상태바의 `Ln N`은 스크롤 위치에서 계산합니다.
 - 데스크톱은 좌측 sticky 탐색기, 768px 이하에서는 하단 고정 바로 바뀌고 탭·줄 번호·상태바는 숨깁니다.
 - 현재 섹션 표시는 `IntersectionObserver`가 스크롤 위치를 추적해 갱신합니다.

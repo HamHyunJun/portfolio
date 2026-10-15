@@ -37,7 +37,7 @@ export interface ContactLink {
     href: string
 }
 
-export type SectionKey = "about" | "skill" | "works"
+export type SectionKey = "about" | "skill" | "works" | "contact"
 
 // 탐색기·탭에 파일처럼 표시되는 섹션 항목
 export interface NavFile {
