@@ -3,7 +3,10 @@
         <MainSectionTitle title="WORKS" no="03" />
         <div v-if="groups.length" class="works-groups">
             <section v-for="group in groups" :key="group.key" class="works-group">
-                <h3 class="group-title">{{ group.title }}</h3>
+                <h3 class="group-title">
+                    {{ group.title }}
+                    <span class="group-count">{{ group.items.length }}</span>
+                </h3>
                 <div class="works-content">
                     <UICarousel
                         :ref="(el): void => { carousels[group.key] = el as Carousel | undefined }"
@@ -195,6 +198,13 @@
 
                 &::before {
                     content: "// ";
+                    color: var(--green);
+                }
+
+                .group-count {
+                    margin-left: 6px;
+                    font-size: 14px;
+                    font-weight: 400;
                     color: var(--green);
                 }
             }
