@@ -70,26 +70,13 @@
                                     </div>
                                 </div>
                                 <div class="slide-body">
-                                    <button
-                                        :id="`work-toggle-${group.key}-${index}`"
-                                        type="button"
-                                        class="slide-toggle"
-                                        :aria-expanded="!!openMap[group.key]"
-                                        :aria-controls="`work-panel-${group.key}-${index}`"
-                                    >
-                                        <span class="toggle-text">
-                                            <span class="toggle-period">{{ work.period }}</span>
-                                            <span class="toggle-title">{{ work.name }}</span>
+                                    <div class="slide-head">
+                                        <span class="head-text">
+                                            <span class="head-period">{{ work.period }}</span>
+                                            <span class="head-title">{{ work.name }}</span>
                                         </span>
-                                    </button>
-                                    <div
-                                        :id="`work-panel-${group.key}-${index}`"
-                                        class="slide-panel"
-                                        :class="{ open: openMap[group.key] }"
-                                        role="region"
-                                        :aria-labelledby="`work-toggle-${group.key}-${index}`"
-                                        :inert="!openMap[group.key]"
-                                    >
+                                    </div>
+                                    <div class="slide-panel">
                                         <div class="panel-inner">
                                             <p class="panel-summary">{{ work.summary }}</p>
                                             <ul class="panel-stack" aria-label="사용 기술">
@@ -146,8 +133,6 @@
 
     // 그룹(캐러셀)마다 선택된 카드 번호
     const selectedIndexes = reactive<Record<string, number>>({})
-    // 상세창 열림 상태는 그룹 안의 카드가 공유해, 넘겨도 열림/닫힘이 유지된다
-    const openMap = reactive<Record<string, boolean>>({})
     // 카드별 웹/앱 화면 선택. 앱 화면이 있으면 앱, 없으면 웹이 기본
     const viewMap = reactive<Record<string, MediaView>>({})
 
@@ -156,14 +141,13 @@
     // 드래그로 넘기고 손을 뗀 자리의 카드가 클릭으로 처리돼 되돌아가지 않도록 누른 위치를 기억한다
     let downX = 0
 
-    // 카드를 누르면 옆 카드는 그쪽으로 넘기고, 가운데 카드는 상세를 펼치거나 접는다
+    // 옆 카드를 누르면 그쪽으로 넘긴다. 상세는 항상 펼쳐져 있다
     const onCardClick = (e: MouseEvent, key: string, index: number): void => {
         // 링크와 웹/앱 전환 버튼은 자기 동작만 한다
         if ((e.target as HTMLElement).closest("a, .media-tabs")) return
         // 키보드로 누른 클릭(detail 0)은 좌표가 없어 드래그 판정에서 제외한다
         if (e.detail > 0 && Math.abs(e.clientX - downX) > 5) return
-        if (index === (selectedIndexes[key] ?? 0)) openMap[key] = !openMap[key]
-        else carousels[key]?.scrollTo(index)
+        if (index !== (selectedIndexes[key] ?? 0)) carousels[key]?.scrollTo(index)
     }
 
     const viewOf = (work: MainWorkData): MediaView =>
@@ -361,38 +345,30 @@
                             }
                         }
 
-                        .slide-toggle {
+                        .slide-head {
                             width: 100%;
                             padding: 24px;
                             display: flex;
                             align-items: center;
                             justify-content: space-between;
                             gap: 16px;
-                            border: 0;
-                            background: none;
                             color: var(--white);
                             text-align: left;
-                            cursor: pointer;
 
-                            &:focus-visible {
-                                outline: 2px solid var(--white);
-                                outline-offset: -4px;
-                            }
-
-                            .toggle-text {
+                            .head-text {
                                 display: flex;
                                 flex-direction: column;
                                 gap: 6px;
                             }
 
-                            .toggle-period {
+                            .head-period {
                                 font-family: var(--mono);
                                 font-size: 12px;
                                 letter-spacing: 0.05em;
                                 color: var(--green);
                             }
 
-                            .toggle-title {
+                            .head-title {
                                 font-size: 26px;
                                 font-weight: 700;
                                 letter-spacing: -0.01em;
@@ -400,27 +376,13 @@
                         }
 
                         .slide-panel {
-                            display: grid;
-                            grid-template-rows: 0fr;
-                            transition: grid-template-rows 0.3s ease;
-
-                            &.open {
-                                grid-template-rows: 1fr;
-                            }
-
                             .panel-inner {
-                                min-height: 0;
-                                overflow: hidden;
-                                padding: 0 24px;
+                                padding: 0 24px 24px;
                                 display: flex;
                                 flex-direction: column;
                                 gap: 20px;
                                 text-align: left;
                                 color: var(--white);
-                            }
-
-                            &.open .panel-inner {
-                                padding-bottom: 24px;
                             }
 
                             .panel-summary {
@@ -546,18 +508,13 @@
             padding: 20px 4px;
 
             .slide-container {
-                .slide-toggle {
+                .slide-head {
                     padding: 18px 16px;
                 }
 
                 .slide-panel .panel-inner {
-                    padding-right: 16px;
-                    padding-left: 16px;
+                    padding: 0 16px 18px;
                     gap: 16px;
-                }
-
-                .slide-panel.open .panel-inner {
-                    padding-bottom: 18px;
                 }
 
                 .panel-summary {
