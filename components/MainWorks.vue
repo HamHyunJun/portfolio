@@ -145,7 +145,7 @@
     const selectedIndexes = reactive<Record<string, number>>({})
     // 상세창 열림 상태는 그룹 안의 카드가 공유해, 넘겨도 열림/닫힘이 유지된다
     const openMap = reactive<Record<string, boolean>>({})
-    // 카드별 웹/앱 화면 선택. 기본은 웹
+    // 카드별 웹/앱 화면 선택. 앱 화면이 있으면 앱, 없으면 웹이 기본
     const viewMap = reactive<Record<string, MediaView>>({})
 
     const carousels: Record<string, Carousel | undefined> = {}
@@ -162,7 +162,8 @@
         else carousels[key]?.scrollTo(index)
     }
 
-    const viewOf = (work: MainWorkData): MediaView => viewMap[work.name] ?? "web"
+    const viewOf = (work: MainWorkData): MediaView =>
+        viewMap[work.name] ?? (work.appImage ? "app" : "web")
 </script>
 
 <style lang="scss" scoped>
