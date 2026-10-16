@@ -157,7 +157,8 @@
     const onCardClick = (e: MouseEvent, key: string, index: number): void => {
         // 링크와 웹/앱 전환 버튼은 자기 동작만 한다
         if ((e.target as HTMLElement).closest("a, .media-tabs")) return
-        if (Math.abs(e.clientX - downX) > 5) return
+        // 키보드로 누른 클릭(detail 0)은 좌표가 없어 드래그 판정에서 제외한다
+        if (e.detail > 0 && Math.abs(e.clientX - downX) > 5) return
         if (index === (selectedIndexes[key] ?? 0)) openMap[key] = !openMap[key]
         else carousels[key]?.scrollTo(index)
     }
