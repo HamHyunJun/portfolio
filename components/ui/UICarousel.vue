@@ -39,6 +39,7 @@
             )
             embla.on("select", updateSelectedIndex)
             embla.on("init", updateSelectedIndex)
+            embla.on("settle", updateSelectedIndex)
             updateSelectedIndex()
         }
     })

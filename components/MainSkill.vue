@@ -34,15 +34,19 @@
                     </li>
                 </ul>
                 <div class="detail" aria-live="polite">
-                    <Transition name="fade" mode="out-in">
-                        <div :key="selectedOf(skill).name" class="detail-inner">
-                            <div class="detail-head">
-                                <p class="detail-logo">{{ selectedOf(skill).logoText }}</p>
-                                <p class="detail-name">{{ selectedOf(skill).name }}</p>
-                            </div>
-                            <p class="detail-desc">{{ selectedOf(skill).desc }}</p>
+                    <!-- 모든 설명을 같은 칸에 겹쳐 두면 가장 긴 설명 기준으로 높이가 고정된다 -->
+                    <div
+                        v-for="item in skill.data"
+                        :key="item.name"
+                        class="detail-inner"
+                        :class="{ active: selectedOf(skill).name === item.name }"
+                    >
+                        <div class="detail-head">
+                            <p class="detail-logo">{{ item.logoText }}</p>
+                            <p class="detail-name">{{ item.name }}</p>
                         </div>
-                    </Transition>
+                        <p class="detail-desc">{{ item.desc }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,9 +194,8 @@
                     }
                 }
 
-                // 내용 길이가 달라도 칩 아래가 흔들리지 않게 높이를 확보한다
                 .detail {
-                    min-height: 104px;
+                    display: grid;
                     padding: 16px 20px;
                     background: var(--gray);
                     border: 1px solid var(--line);
@@ -200,9 +203,23 @@
                     border-radius: 6px;
 
                     .detail-inner {
+                        grid-area: 1 / 1;
                         display: flex;
                         flex-direction: column;
                         gap: 10px;
+                        opacity: 0;
+                        visibility: hidden;
+                        transform: translateY(6px);
+                        transition:
+                            opacity 0.2s ease,
+                            transform 0.2s ease,
+                            visibility 0.2s;
+
+                        &.active {
+                            opacity: 1;
+                            visibility: visible;
+                            transform: none;
+                        }
                     }
 
                     .detail-head {
@@ -244,25 +261,8 @@
         }
     }
 
-    .fade-enter-active,
-    .fade-leave-active {
-        transition:
-            opacity 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .fade-enter-from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-
-    .fade-leave-to {
-        opacity: 0;
-    }
-
     @media (prefers-reduced-motion: reduce) {
-        .fade-enter-active,
-        .fade-leave-active,
+        .skill .detail-inner,
         .skill .chip {
             transition-duration: 0.01ms;
         }

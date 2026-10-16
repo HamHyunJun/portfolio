@@ -229,6 +229,9 @@
         sizeObserver?.disconnect()
         cancelAnimationFrame(scrollRafId)
         window.removeEventListener("scroll", onScroll)
+        window.removeEventListener("wheel", releasePending)
+        window.removeEventListener("touchstart", releasePending)
+        window.removeEventListener("keydown", releasePending)
     })
 
     onMounted((): void => {
@@ -241,6 +244,9 @@
         })
         if (contentRef.value) sizeObserver.observe(contentRef.value)
         window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("wheel", releasePending, { passive: true })
+        window.addEventListener("touchstart", releasePending, { passive: true })
+        window.addEventListener("keydown", releasePending)
 
         ensureLenis().then((): void => {
             lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
@@ -464,12 +470,28 @@
         },
     ])
 
+    // 메뉴로 이동한 섹션은 사용자가 직접 스크롤(휠·터치·키보드)하기 전까지 활성으로 유지한다.
+    // 짧은 연락처는 상단 20% 선에 닿지 못해 바로 앞 섹션이 활성으로 보이기 때문이다
+    let pendingKey: SectionKey | undefined
+
+    const releasePending = (): void => {
+        if (!pendingKey) return
+        pendingKey = undefined
+        updateActiveSection()
+    }
+
     const scrollToSection = (key: SectionKey): void => {
         const target = sectionRefs[key].value
         if (!target) return
 
+        pendingKey = key
+        activeSection.value = key
+        // 연락처는 맨 아래로 보내 레이아웃이 끝까지 보이게 한다
         if (lenis) {
-            lenis.scrollTo(target)
+            lenis.resize()
+            lenis.scrollTo(key === "contact" ? "bottom" : target)
+        } else if (key === "contact") {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })
         } else {
             target.scrollIntoView({ behavior: "smooth" })
         }
@@ -511,6 +533,10 @@
 
     // 화면 상단 20% 선을 지난 마지막 섹션이 활성. 연락처는 짧아서 선에 닿지 못하므로 페이지 끝이면 활성
     const updateActiveSection = (): void => {
+        if (pendingKey) {
+            activeSection.value = pendingKey
+            return
+        }
         const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
         if (atBottom && contactRef.value) {
             activeSection.value = "contact"
@@ -1064,6 +1090,8 @@
         }
 
         @media (max-width: 768px) {
+            padding-bottom: 0;
+
             .section {
                 padding: 60px 20px;
 
@@ -1102,6 +1130,7 @@
 
                 .main-editor .main-content-wrap {
                     padding-bottom: 72px;
+                    background: var(--base-background);
                 }
             }
         }

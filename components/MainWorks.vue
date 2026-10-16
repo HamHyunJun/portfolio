@@ -18,6 +18,7 @@
                             <article
                                 class="slide-container"
                                 :class="{ active: index === (selectedIndexes[group.key] ?? 0) }"
+                                @pointerdown="downX = $event.clientX"
                                 @click="onCardClick($event, group.key, index)"
                             >
                                 <div
@@ -149,10 +150,14 @@
 
     const carousels: Record<string, Carousel | undefined> = {}
 
+    // 드래그로 넘기고 손을 뗀 자리의 카드가 클릭으로 처리돼 되돌아가지 않도록 누른 위치를 기억한다
+    let downX = 0
+
     // 카드를 누르면 옆 카드는 그쪽으로 넘기고, 가운데 카드는 상세를 펼치거나 접는다
     const onCardClick = (e: MouseEvent, key: string, index: number): void => {
         // 링크와 웹/앱 전환 버튼은 자기 동작만 한다
         if ((e.target as HTMLElement).closest("a, .media-tabs")) return
+        if (Math.abs(e.clientX - downX) > 5) return
         if (index === (selectedIndexes[key] ?? 0)) openMap[key] = !openMap[key]
         else carousels[key]?.scrollTo(index)
     }
@@ -517,6 +522,36 @@
 
                 .media-layer-app {
                     padding-top: 44px;
+                }
+            }
+        }
+    }
+
+    // 320px 근처에서는 카드·패딩 때문에 상세 글 폭이 160px대로 좁아져 세로로 길어진다. 카드 폭을 넓히고 안쪽 여백을 줄여 글 폭을 확보한다
+    @media (max-width: 480px) {
+        .works .works-content .carousel .carousel-slide {
+            flex-basis: 100%;
+            padding: 20px 4px;
+
+            .slide-container {
+                .slide-toggle {
+                    padding: 18px 16px;
+                }
+
+                .slide-panel .panel-inner {
+                    padding-right: 16px;
+                    padding-left: 16px;
+                    gap: 16px;
+                }
+
+                .slide-panel.open .panel-inner {
+                    padding-bottom: 18px;
+                }
+
+                .panel-summary {
+                    padding-top: 16px;
+                    font-size: 14px;
+                    line-height: 165%;
                 }
             }
         }

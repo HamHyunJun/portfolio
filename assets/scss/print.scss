@@ -133,6 +133,8 @@
     .slide-container {
         transform: none !important;
         box-shadow: none !important;
+        // 현재 선택된 카드만 강조되지 않게 모두 같은 테두리로 맞춘다
+        border-color: var(--line) !important;
     }
 
     .slide-media {
@@ -217,7 +219,7 @@
 
     .slide-panel .panel-inner {
         gap: 10px !important;
-        padding: 0 16px !important;
+        padding: 0 16px 12px !important;
     }
 
     .slide-panel .panel-inner .panel-summary {
