@@ -50,7 +50,7 @@
             background: none;
             font-family: var(--mono);
             font-size: 13px;
-            color: var(--primary);
+            color: #8b949e;
             white-space: nowrap;
             cursor: pointer;
             transition:

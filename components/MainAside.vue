@@ -46,7 +46,7 @@
             font-family: var(--mono);
             font-size: 11px;
             letter-spacing: 0.15em;
-            color: var(--primary);
+            color: #8b949e;
         }
 
         .aside-title {
@@ -72,7 +72,7 @@
             font-family: var(--mono);
             font-size: 14px;
             text-align: left;
-            color: var(--primary);
+            color: #8b949e;
             cursor: pointer;
             transition:
                 color 0.2s ease,

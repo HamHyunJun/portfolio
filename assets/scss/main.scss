@@ -4,7 +4,7 @@
 
 :root {
     // GitHub 다크 계열 배경 + 터미널 그린 포인트. blue/purple/orange는 코드 하이라이트용
-    --primary: #8b949e;
+    --primary: #e6edf3;
     --base-background: #0d1117;
     --white: #e6edf3;
     --gray: #161b22;
@@ -46,6 +46,14 @@
 
 html {
     color-scheme: dark;
+}
+
+// 데스크톱 sticky 탭 바(41px)와 하단 상태 바(약 24px)에 Tab 포커스 요소가 가려지지 않게 한다
+@media (min-width: 769px) {
+    html {
+        scroll-padding-top: 41px;
+        scroll-padding-bottom: 24px;
+    }
 }
 
 ::selection {

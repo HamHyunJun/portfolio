@@ -134,7 +134,7 @@
                         background: var(--gray);
                         font-family: var(--mono);
                         font-size: 13px;
-                        color: var(--primary);
+                        color: var(--white);
                         cursor: pointer;
                         transition:
                             color 0.2s ease,
