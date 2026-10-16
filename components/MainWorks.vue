@@ -6,7 +6,7 @@
                 <h3 class="group-title">{{ group.title }}</h3>
                 <div class="works-content">
                     <UICarousel
-                        :ref="(el) => (carousels[group.key] = el as Carousel | null)"
+                        :ref="(el): void => { carousels[group.key] = el as Carousel | undefined }"
                         class="carousel"
                         @change="selectedIndexes[group.key] = $event"
                     >
@@ -129,12 +129,16 @@
 
     type MediaView = "web" | "app"
 
+    interface Carousel {
+        scrollTo: (index: number) => void
+    }
+
     const views: MediaView[] = ["web", "app"]
     // 프로젝트가 없는 그룹은 섹션 자체를 숨긴다
     const groups = [
         { key: "company", title: "Company Projects", items: companyWorks },
         { key: "side", title: "Side Projects", items: sideWorks },
-    ].filter((group) => group.items.length)
+    ].filter((group): boolean => group.items.length > 0)
 
     // 그룹(캐러셀)마다 선택된 카드 번호
     const selectedIndexes = reactive<Record<string, number>>({})
@@ -143,8 +147,7 @@
     // 카드별 웹/앱 화면 선택. 기본은 웹
     const viewMap = reactive<Record<string, MediaView>>({})
 
-    type Carousel = { scrollTo: (index: number) => void }
-    const carousels: Record<string, Carousel | null> = {}
+    const carousels: Record<string, Carousel | undefined> = {}
 
     // 카드를 누르면 옆 카드는 그쪽으로 넘기고, 가운데 카드는 상세를 펼치거나 접는다
     const onCardClick = (e: MouseEvent, key: string, index: number): void => {

@@ -6,53 +6,53 @@
                 <i class="icon icon-work"></i>
                 <h3 class="contents-title">경력</h3>
             </div>
-            <div class="contents-desc-container">
-                <div
+            <ul class="contents-desc-container">
+                <li
                     v-for="(work, index) in aboutData.works"
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <span class="contents-desc">{{ work.date }}</span>
+                    <p class="contents-desc">{{ work.date }}</p>
                     <div class="contents-desc-body">
-                        <span class="contents-desc-detail">{{ work.detail }}</span>
+                        <p class="contents-desc-detail">{{ work.detail }}</p>
                         <ul v-if="work.points?.length" class="contents-points">
                             <li v-for="point in work.points" :key="point">{{ point }}</li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
         <div class="about-contents" data-aos="fade-up" data-aos-delay="100">
             <div class="contents-title-container">
                 <i class="icon icon-awards"></i>
                 <h3 class="contents-title">자격 및 수상</h3>
             </div>
-            <div class="contents-desc-container">
-                <div
+            <ul class="contents-desc-container">
+                <li
                     v-for="(award, index) in aboutData.awards"
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <span class="contents-desc">{{ award.date }}</span>
-                    <span class="contents-desc-detail">{{ award.detail }}</span>
-                </div>
-            </div>
+                    <p class="contents-desc">{{ award.date }}</p>
+                    <p class="contents-desc-detail">{{ award.detail }}</p>
+                </li>
+            </ul>
         </div>
         <div class="about-contents" data-aos="fade-up" data-aos-delay="200">
             <div class="contents-title-container">
                 <i class="icon icon-education"></i>
                 <h3 class="contents-title">학력</h3>
             </div>
-            <div class="contents-desc-container">
-                <div
+            <ul class="contents-desc-container">
+                <li
                     v-for="(edu, index) in aboutData.education"
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <span class="contents-desc">{{ edu.date }}</span>
-                    <span class="contents-desc-detail">{{ edu.detail }}</span>
-                </div>
-            </div>
+                    <p class="contents-desc">{{ edu.date }}</p>
+                    <p class="contents-desc-detail">{{ edu.detail }}</p>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -114,6 +114,8 @@
 
             .contents-desc-container {
                 position: relative;
+                margin: 0;
+                list-style: none;
 
                 // 남은 폭을 모두 차지해 글이 길어도 짧아도 세로선 위치가 같다
                 @media (min-width: 1101px) {

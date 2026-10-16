@@ -5,7 +5,7 @@
             함께 만들어 갈 기회를<br />
             기다리고 있어요.
         </p>
-        <ul class="contact-list" @pointermove="trackGlow($event, '.contact-link')">
+        <ul class="contact-list" @pointermove="glow.trackGlow($event, '.contact-link')">
             <li v-for="contact in contacts" :key="contact.href">
                 <a
                     class="contact-link"
@@ -13,8 +13,8 @@
                     :target="isExternal(contact.href) ? '_blank' : undefined"
                     :rel="isExternal(contact.href) ? 'noopener noreferrer' : undefined"
                 >
-                    <span class="contact-kind">{{ kindOf(contact.href) }}</span>
-                    <span class="contact-value">{{ valueOf(contact) }}</span>
+                    <p class="contact-kind">{{ kindOf(contact.href) }}</p>
+                    <p class="contact-value">{{ valueOf(contact) }}</p>
                 </a>
             </li>
         </ul>
@@ -25,6 +25,7 @@
 <script setup lang="ts">
     import { contacts } from "~/data/contacts"
     import type { ContactLink } from "~/structure/user"
+    import glow from "~/utils/glow"
 
     // 브라우저 인쇄 창에서 "PDF로 저장"을 고르면 된다. 파일 이름은 문서 제목을 따라가서 잠깐 바꾼다
     const savePdf = (): void => {
@@ -148,7 +149,7 @@
                     opacity: 1;
                 }
 
-                > span {
+                > p {
                     position: relative;
                 }
 

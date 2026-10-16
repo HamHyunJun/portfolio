@@ -14,6 +14,8 @@
 | 라이브러리 | Embla Carousel(+Autoplay), AOS, Lenis(CDN 로드) |
 | 패키지 매니저 | pnpm |
 
+`@inspector-agent/vite-plugin`은 개발 서버(`pnpm dev`)에서만 동작하는 점검용 devDependency라 프로덕션 빌드에는 포함되지 않습니다. `nuxt.config.ts`의 `allowedHosts`는 임시 터널(cloudflared)로 외부 접속할 때만 필요합니다.
+
 외부 라이브러리는 꼭 필요한 것만 쓰고, 나머지는 브라우저 표준 API로 구현했습니다.
 
 ## 디자인
@@ -91,7 +93,7 @@
 │   └── ui/                    Embla 캐러셀 래퍼
 ├── data/                      works.ts, contacts.ts — 콘텐츠만 수정하는 곳
 ├── structure/user.ts          데이터 타입 정의
-├── utils/glow.ts              카드 커서 글로우 헬퍼
+├── utils/glow.ts              카드 커서 글로우 헬퍼 (`export default` 객체)
 ├── assets/scss/               전역 스타일, 색상 변수, 아이콘(mask 기반), 인쇄 스타일
 └── public/works/              프로젝트 화면 이미지
 ```

@@ -1,12 +1,12 @@
 <template>
     <footer class="status-bar" aria-hidden="true">
-        <span>● master</span>
-        <span class="status-right">
-            <span>Ln {{ line }}, Col 1</span>
-            <span>{{ file }}</span>
-            <span>UTF-8</span>
-            <span>Nuxt 3</span>
-        </span>
+        <p>● master</p>
+        <div class="status-right">
+            <p>Ln {{ line }}, Col 1</p>
+            <p>{{ file }}</p>
+            <p>UTF-8</p>
+            <p>Nuxt 3</p>
+        </div>
     </footer>
 </template>
 
@@ -34,7 +34,7 @@
         font-size: 12px;
         color: #fff;
 
-        span {
+        p {
             font-family: var(--mono);
         }
 
