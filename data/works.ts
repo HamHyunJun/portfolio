@@ -5,7 +5,35 @@ import type { MainWorkData } from "~/structure/user"
 // webImage·appImage는 public/ 기준 경로(예: "/works/a.png")이며, appImage는 앱 화면이 있을 때만 넣는다.
 
 // 회사 업무로 진행한 프로젝트. 공개해도 되는 범위만 적는다.
-export const companyWorks: MainWorkData[] = []
+export const companyWorks: MainWorkData[] = [
+    {
+        name: "고고고",
+        period: "2025. 07. ~ 2026. 08.",
+        summary:
+            "쇼핑하고 별을 모아 룰렛으로 쿠폰을 받는 리워드 앱(iOS·Android)의 프론트엔드입니다. 별 적립 현황을 보여주는 홈 화면과 룰렛 돌리기, 출석체크·쿠폰함·친구초대 화면을 구현했습니다. 웹뷰 앱이라 앱 브릿지로 플랫폼과 안전 영역을 받아 화면에 반영하고, 인증 토큰은 쿠키와 메모리에 나눠 저장하며 만료 전에 자동으로 갱신하도록 했습니다.",
+        stack: ["Nuxt 4", "Vue 3", "TypeScript", "Pinia", "SCSS", "Flutter WebView"],
+        webImage: "/works/gogogo.jpg",
+        links: [],
+    },
+    {
+        name: "짤스튜디오",
+        period: "2024. 05. ~ 2025. 08.",
+        summary:
+            "쇼츠·영상 크리에이터를 위한 음원 협업·유통 플랫폼의 웹 프론트엔드입니다. 파트너가 채널의 조회수와 예상 수익을 확인하는 대시보드(기간별 지표·추이 차트, 채널별·영상별 실적)와, 카카오톡 숏폼 크리에이터 모집 등 프로모션·이벤트 페이지를 구현했습니다. 한국어·영어·일본어·중국어 다국어를 지원하고, 반복되는 화면은 컴포넌트와 composable로 나눠 재사용했습니다.",
+        stack: ["Nuxt 3", "Vue 3", "TypeScript", "SCSS", "ECharts", "Element Plus", "i18n"],
+        webImage: "/works/zzal-studio.jpg",
+        links: [],
+    },
+    {
+        name: "ESMS 관리자 웹",
+        period: "2022. 03. ~ 2023. 08.",
+        summary:
+            "독거 어르신 댁에 설치한 IoT 장비의 상태와 응급 이벤트를 한 화면에서 관제하는 관리자 웹입니다. 대시보드에서 장비·이벤트 현황을 실시간으로 확인하고, 대상자 상세, 장비·센서 설정, 펌웨어와 공지 관리 화면을 구현했습니다. 대시보드와 이벤트 알림은 WebSocket으로 실시간 갱신하고, 목록 화면에는 조건 필터와 페이지네이션을 적용했습니다.",
+        stack: ["Vue 2", "Vuex", "Vue Router", "Socket.IO", "Chart.js", "FullCalendar", "Axios", "CoreUI"],
+        webImage: "/works/esms.jpg",
+        links: [],
+    },
+]
 
 // 개인 사이드 프로젝트
 export const sideWorks: MainWorkData[] = [

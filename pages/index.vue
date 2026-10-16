@@ -717,7 +717,9 @@
             background: var(--base-background);
 
             &.main-board {
-                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
                 margin: auto 0;
                 background:
                     radial-gradient(60% 50% at 85% 10%, rgb(63 185 80 / 10%), transparent 70%),
@@ -850,7 +852,7 @@
 
                 .board-title {
                     position: relative;
-                    height: 100%;
+                    flex: 1;
                     font-size: clamp(48px, 12vw, 180px);
                     font-weight: 700;
                     display: flex;
@@ -1044,11 +1046,13 @@
                     display: flex;
                     flex-direction: column;
                     overflow: hidden;
+                    // 줄 번호가 행 높이를 붙잡아 상세를 닫아도 본문이 줄어들지 못하는 문제 방지
+                    contain: size;
                     border-right: 1px solid var(--line);
                     background: var(--base-background);
                     font-family: var(--mono);
                     font-size: 12px;
-                    color: #484f58;
+                    color: var(--white);
                     user-select: none;
 
                     p {

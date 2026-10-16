@@ -12,7 +12,10 @@
                     :key="index"
                     class="contents-desc-wrap"
                 >
-                    <p class="contents-desc">{{ work.date }}</p>
+                    <p class="contents-desc">
+                        {{ work.date }}
+                        <span class="desc-period">{{ periodOf(work.date) }}</span>
+                    </p>
                     <div class="contents-desc-body">
                         <p class="contents-desc-detail">{{ work.detail }}</p>
                         <ul v-if="work.points?.length" class="contents-points">
@@ -63,6 +66,21 @@
     defineProps<{
         aboutData: MainAboutData
     }>()
+
+    // "2020. 12. ~ 2022. 03." 형식에서 시작·끝 달을 포함해 근무 기간을 계산한다. 끝이 없으면 이번 달까지
+    const periodOf = (date: string): string => {
+        const [start, end] = date.split("~").map((part): number[] | undefined => {
+            const m = part.match(/(\d{4})\.\s*(\d{2})/)
+            return m ? [Number(m[1]), Number(m[2])] : undefined
+        })
+        if (!start) return ""
+        const now = new Date()
+        const [endYear, endMonth] = end ?? [now.getFullYear(), now.getMonth() + 1]
+        const total = (endYear - start[0]) * 12 + (endMonth - start[1]) + 1
+        const years = Math.floor(total / 12)
+        const months = total % 12
+        return [years && `${years}년`, months && `${months}개월`].filter(Boolean).join(" ")
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -184,6 +202,13 @@
                         font-size: 12px;
                         line-height: normal;
                         color: var(--green);
+
+                        .desc-period {
+                            display: block;
+                            margin-top: 4px;
+                            font-size: 11px;
+                            color: var(--white);
+                        }
                     }
 
                     .contents-desc-body {
@@ -207,7 +232,7 @@
                             font-size: 13px;
                             line-height: 160%;
                             word-break: keep-all;
-                            color: var(--primary);
+                            color: var(--white);
 
                             &::before {
                                 content: "›";
