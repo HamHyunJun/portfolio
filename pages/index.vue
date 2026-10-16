@@ -248,6 +248,7 @@
         window.addEventListener("touchstart", releasePending, { passive: true })
         window.addEventListener("keydown", releasePending)
 
+        // 로드에 실패하면 브라우저 기본 스크롤을 쓴다
         ensureLenis().then((): void => {
             lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
 
@@ -256,7 +257,7 @@
                 lenisRafId = requestAnimationFrame(lenisRaf)
             }
             lenisRafId = requestAnimationFrame(lenisRaf)
-        })
+        }).catch((): void => {})
 
         updateActiveSection()
     })
@@ -429,7 +430,7 @@
                 {
                     name: "GitHub",
                     desc:
-                        "Git으로 변경 이력을 남기고 GitHub으로 협업했습니다. 이 포트폴리오처럼 dev 브랜치에서 작업한 뒤 Pull Request(코드 검토를 요청하는 병합 요청)로 master에 합치는 Git Flow 방식으로 운영해, 작업 중인 코드가 운영 코드를 건드리지 않게 했습니다. 커밋 메시지에는 무엇을 왜 바꿨는지 한국어로 적었습니다.",
+                        "Git으로 변경 이력을 남기고 GitHub으로 협업했습니다. 이 포트폴리오처럼 dev 브랜치에서 작업한 뒤 검증하고 master에 병합하는 브랜치 전략으로 운영해, 작업 중인 코드가 운영 코드를 건드리지 않게 했습니다. 커밋 메시지에는 무엇을 왜 바꿨는지 한국어로 적었습니다.",
                     logoText: "GH",
                     logoColor: "#663005",
                     logoBackground: "#D2A480",
@@ -581,9 +582,12 @@
             })
         })
 
+    const siteUrl = "https://hyunjun-portfolio-three.vercel.app"
+
     useHead({
         htmlAttrs: { lang: "ko" },
         link: [
+            { rel: "canonical", href: siteUrl },
             { rel: "preconnect", href: "https://fonts.googleapis.com" },
             { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
             {
@@ -592,9 +596,18 @@
             },
         ],
     })
+    const seoTitle = "HAM HYUN JUN | Front-End Developer"
+    const seoDescription = "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다."
     useSeoMeta({
-        title: "HAM HYUN JUN | Front-End Developer",
-        description: "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다.",
+        title: seoTitle,
+        description: seoDescription,
+        ogTitle: seoTitle,
+        ogDescription: seoDescription,
+        ogType: "website",
+        ogUrl: siteUrl,
+        ogImage: `${siteUrl}/og.jpg`,
+        ogLocale: "ko_KR",
+        twitterCard: "summary_large_image",
     })
 </script>
 
