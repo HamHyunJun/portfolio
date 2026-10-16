@@ -138,6 +138,12 @@
                         gap: 12px;
                     }
 
+                    // 아주 좁은 화면은 날짜 칸이 내용 폭을 너무 줄이므로 내용을 날짜 아래로 내린다
+                    @media (max-width: 480px) {
+                        flex-direction: column;
+                        gap: 4px;
+                    }
+
                     // 타임라인 점
                     &::before {
                         content: "";
@@ -168,6 +174,11 @@
                         @media (max-width: 1100px) {
                             flex-basis: 12ch;
                             white-space: normal;
+                        }
+
+                        @media (max-width: 480px) {
+                            flex-basis: auto;
+                            white-space: nowrap;
                         }
                         font-family: var(--mono);
                         font-size: 12px;
