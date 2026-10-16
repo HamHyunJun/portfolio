@@ -27,6 +27,9 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.44(typescript@5.8.3))
     devDependencies:
+      '@inspector-agent/vite-plugin':
+        specifier: ^0.7.0
+        version: 0.7.1(vite@6.3.5(@types/node@22.15.29)(jiti@2.4.2)(sass-embedded@1.89.1)(terser@5.40.0)(yaml@2.8.0))
       sass-embedded:
         specifier: ^1.89.1
         version: 1.89.1
@@ -483,6 +486,12 @@ packages:
 
   '@fastify/busboy@3.1.1':
     resolution: {integrity: sha512-5DGmA8FTdB2XbDeEwc/5ZXBl6UbBAyBOOLlPuBnZ/N1SwdH9Ii+cOX3tBROlDgcTXxjOYnLMVoKk9+FXAw0CJw==}
+
+  '@inspector-agent/vite-plugin@0.7.1':
+    resolution: {integrity: sha512-VwisMQMMb5Cbro5lwpu3ZsyYohQNl7a+uxQZdJGrgqxfdXUTpjF+ZnyYXGskh9KBNWFHq6tkCWPF7BqmJOZBPA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      vite: '>=5.0.0'
 
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -4135,6 +4144,13 @@ snapshots:
     optional: true
 
   '@fastify/busboy@3.1.1': {}
+
+  '@inspector-agent/vite-plugin@0.7.1(vite@6.3.5(@types/node@22.15.29)(jiti@2.4.2)(sass-embedded@1.89.1)(terser@5.40.0)(yaml@2.8.0))':
+    dependencies:
+      '@babel/parser': 7.29.9
+      '@vue/compiler-sfc': 3.5.44
+      magic-string: 0.30.21
+      vite: 6.3.5(@types/node@22.15.29)(jiti@2.4.2)(sass-embedded@1.89.1)(terser@5.40.0)(yaml@2.8.0)
 
   '@ioredis/commands@1.2.0': {}
 
