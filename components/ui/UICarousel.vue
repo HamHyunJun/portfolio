@@ -14,11 +14,14 @@
         (e: "change", index: number): void
     }>()
 
+    // 카드 클릭으로 해당 슬라이드로 넘기기 위해 노출한다
+    defineExpose({ scrollTo: (index: number): void => embla?.scrollTo(index) })
+
     const emblaRef = ref<HTMLElement>()
 
     let embla: ReturnType<typeof EmblaCarousel>
 
-    onMounted(async () => {
+    onMounted(async (): Promise<void> => {
         await nextTick()
         if (emblaRef.value) {
             embla = EmblaCarousel(
@@ -44,10 +47,7 @@
         emit("change", embla?.selectedScrollSnap() ?? 0)
     }
 
-    // 카드 클릭으로 해당 슬라이드로 넘기기 위해 노출한다
-    defineExpose({ scrollTo: (index: number): void => embla?.scrollTo(index) })
-
-    onBeforeUnmount(() => embla?.destroy())
+    onBeforeUnmount((): void => embla?.destroy())
 </script>
 
 <style lang="scss" scoped>

@@ -16,7 +16,7 @@
             </div>
             <div class="board-bar" aria-hidden="true">
                 <i></i><i></i><i></i>
-                <span>~/portfolio — zsh</span>
+                <p>~/portfolio — zsh</p>
             </div>
             <div class="board-title">
                 <p class="board-ticker" aria-hidden="true">
@@ -85,7 +85,7 @@
                 />
                 <div class="editor-body">
                     <div class="gutter" aria-hidden="true">
-                        <span v-for="n in lineCount" :key="n">{{ n }}</span>
+                        <p v-for="n in lineCount" :key="n">{{ n }}</p>
                     </div>
                     <div ref="contentRef" class="main-content-wrap">
                         <section ref="aboutRef" class="section main-about">
@@ -114,42 +114,40 @@
     import { contacts } from "~/data/contacts"
     import "aos/dist/aos.css"
 
-    useHead({
-        htmlAttrs: { lang: "ko" },
-        link: [
-            { rel: "preconnect", href: "https://fonts.googleapis.com" },
-            { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-            {
-                rel: "stylesheet",
-                href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap",
-            },
-        ],
-    })
-    useSeoMeta({
-        title: "HAM HYUN JUN | Front-End Developer",
-        description: "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다.",
-    })
-
     definePageMeta({
         layout: "default",
     })
 
+    interface Token {
+        type: "ps" | "kw" | "fn" | "str" | "prop" | "dim"
+        text: string
+    }
+
+    interface CodeLine {
+        tokens: Token[]
+        len: number
+        delay: number
+    }
+
+    interface NameChar {
+        char: string
+        i: number
+    }
+
     let lenis: any
     let lenisRafId = 0
-    let sizeObserver: ResizeObserver | null = null
+    let sizeObserver: ResizeObserver | undefined
     let scrollRafId = 0
 
     // 단어 단위로 줄바꿈되도록 단어별로 묶고, 글자 인덱스(공백 포함)는 진입 딜레이용으로 유지
-    const nameLines = ["HAM", "HYUN JUN"].map((line) => {
+    const nameLines = ["HAM", "HYUN JUN"].map((line): NameChar[][] => {
         let i = 0
-        return line.split(" ").map((word) => {
-            const chars = [...word].map((char) => ({ char, i: i++ }))
+        return line.split(" ").map((word): NameChar[] => {
+            const chars = [...word].map((char): NameChar => ({ char, i: i++ }))
             i++
             return chars
         })
     })
-
-    type Token = { type: "ps" | "kw" | "fn" | "str" | "prop" | "dim"; text: string }
 
     // 한 글자당 40ms로 한 줄씩 타이핑. 폭은 ch 단위라 글자 수와 정확히 맞는다
     const codeSource: Token[][] = [
@@ -179,8 +177,8 @@
         [{ type: "dim", text: "}" }],
     ]
     let codeDelay = 1100
-    const codeLines = codeSource.map((tokens) => {
-        const len = tokens.reduce((sum, t) => sum + t.text.length, 0)
+    const codeLines = codeSource.map((tokens): CodeLine => {
+        const len = tokens.reduce((sum, t): number => sum + t.text.length, 0)
         const line = { tokens, len, delay: codeDelay }
         codeDelay += len * 40 + 150
         return line
@@ -201,20 +199,65 @@
     ]
 
     const LINE_HEIGHT = 24
+    const GLYPHS = "01<>/{}[]#$%&*"
+    let scrambling = false
 
-    const activeSection = ref<SectionKey | null>(null)
-    const contentRef = ref<HTMLElement | null>(null)
-    const progressRef = ref<HTMLElement | null>(null)
-    const nameRef = ref<HTMLElement | null>(null)
+    // 히어로 라벨에서 순서대로 바뀌는 단어. 끝의 첫 단어 복사본이 무한 루프를 이어 준다
+    const tickerWords = ["Front-End", "Vue", "Nuxt", "TypeScript", "Front-End"]
+
+    const activeSection = ref<SectionKey>()
+    const contentRef = ref<HTMLElement>()
+    const progressRef = ref<HTMLElement>()
+    const nameRef = ref<HTMLElement>()
     const lineCount = ref(0)
     const line = ref(1)
-    const activeFile = computed(() => files.find((f) => f.key === activeSection.value) ?? files[0])
-    const aboutRef = ref<HTMLElement | null>(null)
-    const skillRef = ref<HTMLElement | null>(null)
-    const worksRef = ref<HTMLElement | null>(null)
-    const contactRef = ref<HTMLElement | null>(null)
+    const aboutRef = ref<HTMLElement>()
+    const skillRef = ref<HTMLElement>()
+    const worksRef = ref<HTMLElement>()
+    const contactRef = ref<HTMLElement>()
 
-    const aboutData = computed<MainAboutData>(() => ({
+    const sectionRefs = {
+        about: aboutRef,
+        skill: skillRef,
+        works: worksRef,
+        contact: contactRef,
+    } as const
+
+    onBeforeUnmount((): void => {
+        lenis?.destroy()
+        cancelAnimationFrame(lenisRafId)
+        sizeObserver?.disconnect()
+        cancelAnimationFrame(scrollRafId)
+        window.removeEventListener("scroll", onScroll)
+    })
+
+    onMounted((): void => {
+        AOS.init({ once: true, disable: prefersReducedMotion })
+        scrambleName(true)
+
+        // 에디터 높이에 맞춰 줄 번호 개수를 정한다
+        sizeObserver = new ResizeObserver(([entry]): void => {
+            lineCount.value = Math.floor(entry.contentRect.height / LINE_HEIGHT)
+        })
+        if (contentRef.value) sizeObserver.observe(contentRef.value)
+        window.addEventListener("scroll", onScroll, { passive: true })
+
+        ensureLenis().then((): void => {
+            lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
+
+            const lenisRaf = (time: number): void => {
+                lenis.raf(time)
+                lenisRafId = requestAnimationFrame(lenisRaf)
+            }
+            lenisRafId = requestAnimationFrame(lenisRaf)
+        })
+
+        updateActiveSection()
+    })
+
+    const activeFile = computed((): NavFile => files.find((f): boolean => f.key === activeSection.value) ?? files[0])
+
+    const aboutData = computed((): MainAboutData => ({
         education: [
             { date: "2016. 02.", detail: "효원고등학교 졸업" },
             { date: "2021. 02.", detail: "오산대학교 스마트IT과 졸업" },
@@ -267,7 +310,7 @@
         ],
     }))
 
-    const skillData = computed<MainSkillData[]>(() => [
+    const skillData = computed((): MainSkillData[] => [
         {
             category: "Languages",
             data: [
@@ -421,16 +464,6 @@
         },
     ])
 
-    // 히어로 라벨에서 순서대로 바뀌는 단어. 끝의 첫 단어 복사본이 무한 루프를 이어 준다
-    const tickerWords = ["Front-End", "Vue", "Nuxt", "TypeScript", "Front-End"]
-
-    const sectionRefs = {
-        about: aboutRef,
-        skill: skillRef,
-        works: worksRef,
-        contact: contactRef,
-    } as const
-
     const scrollToSection = (key: SectionKey): void => {
         const target = sectionRefs[key].value
         if (!target) return
@@ -441,14 +474,6 @@
             target.scrollIntoView({ behavior: "smooth" })
         }
     }
-
-    onBeforeUnmount(() => {
-        lenis?.destroy()
-        cancelAnimationFrame(lenisRafId)
-        sizeObserver?.disconnect()
-        cancelAnimationFrame(scrollRafId)
-        window.removeEventListener("scroll", onScroll)
-    })
 
     // 히어로 위에서 커서 위치를 CSS 변수로 넘겨 스포트라이트와 점 격자 하이라이트가 따라오게 한다
     const onBoardMove = (e: PointerEvent): void => {
@@ -462,14 +487,12 @@
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
     // 이름 글자가 코드 기호로 깜빡이다 제 글자로 해독되는 효과 (진입 시 1회 + hover 때마다)
-    const GLYPHS = "01<>/{}[]#$%&*"
-    let scrambling = false
     const scrambleName = (intro: boolean): void => {
         const els = nameRef.value?.querySelectorAll<HTMLElement>(".board-char")
         if (!els || scrambling || prefersReducedMotion()) return
         scrambling = true
         let done = 0
-        els.forEach((el, n) => {
+        els.forEach((el, n): void => {
             const final = el.textContent?.trim() ?? ""
             const delay = intro ? Number(el.style.getPropertyValue("--i")) * 70 + 150 : n * 30
             let frame = 0
@@ -493,7 +516,7 @@
             activeSection.value = "contact"
             return
         }
-        let current: SectionKey | null = null
+        let current: SectionKey | undefined
         for (const key of ["about", "skill", "works"] as const) {
             const el = sectionRefs[key].value
             if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.2) current = key
@@ -504,7 +527,7 @@
     // 스크롤 위치를 에디터의 "Ln N"으로 환산해 상태바에 보여 준다
     const onScroll = (): void => {
         cancelAnimationFrame(scrollRafId)
-        scrollRafId = requestAnimationFrame(() => {
+        scrollRafId = requestAnimationFrame((): void => {
             line.value = Math.floor(window.scrollY / LINE_HEIGHT) + 1
             updateActiveSection()
             const max = document.documentElement.scrollHeight - window.innerHeight
@@ -515,32 +538,8 @@
         })
     }
 
-    onMounted(() => {
-        AOS.init({ once: true, disable: prefersReducedMotion })
-        scrambleName(true)
-
-        // 에디터 높이에 맞춰 줄 번호 개수를 정한다
-        sizeObserver = new ResizeObserver(([entry]) => {
-            lineCount.value = Math.floor(entry.contentRect.height / LINE_HEIGHT)
-        })
-        if (contentRef.value) sizeObserver.observe(contentRef.value)
-        window.addEventListener("scroll", onScroll, { passive: true })
-
-        ensureLenis().then(() => {
-            lenis = new window.Lenis({ duration: 1.0, smoothWheel: true })
-
-            const lenisRaf = (time: number): void => {
-                lenis.raf(time)
-                lenisRafId = requestAnimationFrame(lenisRaf)
-            }
-            lenisRafId = requestAnimationFrame(lenisRaf)
-        })
-
-        updateActiveSection()
-    })
-
     const ensureLenis = (): Promise<void> =>
-        new Promise<void>((resolve, reject) => {
+        new Promise<void>((resolve, reject): void => {
             if (window.Lenis) return resolve()
 
             let script = document.querySelector<HTMLScriptElement>('script[src*="lenis.min.js"]')
@@ -550,11 +549,27 @@
                 script.async = true
                 document.head.appendChild(script)
             }
-            script.addEventListener("load", () => resolve(), { once: true })
-            script.addEventListener("error", () => reject(new Error("Lenis load failed")), {
+            script.addEventListener("load", (): void => resolve(), { once: true })
+            script.addEventListener("error", (): void => reject(new Error("Lenis load failed")), {
                 once: true,
             })
         })
+
+    useHead({
+        htmlAttrs: { lang: "ko" },
+        link: [
+            { rel: "preconnect", href: "https://fonts.googleapis.com" },
+            { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+            {
+                rel: "stylesheet",
+                href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap",
+            },
+        ],
+    })
+    useSeoMeta({
+        title: "HAM HYUN JUN | Front-End Developer",
+        description: "프론트엔드 개발자 HAM HYUN JUN의 포트폴리오. 경력, 기술 스택, 프로젝트를 소개합니다.",
+    })
 </script>
 
 <style lang="scss" scoped>
@@ -802,7 +817,7 @@
                         }
                     }
 
-                    span {
+                    p {
                         margin-left: 12px;
                     }
                 }
@@ -1010,7 +1025,7 @@
                     color: #484f58;
                     user-select: none;
 
-                    span {
+                    p {
                         flex: 0 0 24px;
                         padding-right: 16px;
                         font-family: var(--mono);

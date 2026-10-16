@@ -29,15 +29,15 @@
                 <!-- PDF(인쇄)에서는 클릭할 수 없으므로 모든 기술의 설명을 펼쳐 보여 준다 -->
                 <ul class="print-list" aria-hidden="true">
                     <li v-for="detail in skill.data" :key="detail.name">
-                        <span class="print-name">{{ detail.name }}</span>
-                        <span class="print-desc">{{ detail.desc }}</span>
+                        <p class="print-name">{{ detail.name }}</p>
+                        <p class="print-desc">{{ detail.desc }}</p>
                     </li>
                 </ul>
                 <div class="detail" aria-live="polite">
                     <Transition name="fade" mode="out-in">
                         <div :key="selectedOf(skill).name" class="detail-inner">
                             <div class="detail-head">
-                                <span class="detail-logo">{{ selectedOf(skill).logoText }}</span>
+                                <p class="detail-logo">{{ selectedOf(skill).logoText }}</p>
                                 <p class="detail-name">{{ selectedOf(skill).name }}</p>
                             </div>
                             <p class="detail-desc">{{ selectedOf(skill).desc }}</p>
@@ -60,7 +60,7 @@
     const selected = reactive<Record<string, string>>({})
 
     const selectedOf = (skill: MainSkillData): MainSkillDataDetail =>
-        skill.data.find((d) => d.name === selected[skill.category]) ?? skill.data[0]
+        skill.data.find((d): boolean => d.name === selected[skill.category]) ?? skill.data[0]
 
     // 카테고리마다 팔레트 색 하나(파랑/그린/주황)를 칩·패널에 쓴다
     const toneOf = (category: MainSkillData["category"]): string => {

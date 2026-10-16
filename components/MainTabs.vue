@@ -23,7 +23,7 @@
 
     defineProps<{
         files: NavFile[]
-        activeSection: SectionKey | null
+        activeSection?: SectionKey
     }>()
 
     const emit = defineEmits<{
