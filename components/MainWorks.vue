@@ -43,7 +43,7 @@
                                         <div
                                             v-if="work.appImage"
                                             class="media-layer media-layer-app"
-                                            :class="{ show: viewOf(work) === 'app' }"
+                                            :class="{ show: viewOf(work) === 'app', wide: work.appWide }"
                                         >
                                             <img
                                                 :src="work.appImage"
@@ -133,7 +133,7 @@
 
     // 그룹(캐러셀)마다 선택된 카드 번호
     const selectedIndexes = reactive<Record<string, number>>({})
-    // 카드별 웹/앱 화면 선택. 앱 화면이 있으면 앱, 없으면 웹이 기본
+    // 카드별 웹/앱 화면 선택. defaultView가 없으면 앱 화면이 있을 때 앱, 없으면 웹이 기본
     const viewMap = reactive<Record<string, MediaView>>({})
 
     const carousels: Record<string, Carousel | undefined> = {}
@@ -151,7 +151,7 @@
     }
 
     const viewOf = (work: MainWorkData): MediaView =>
-        viewMap[work.name] ?? (work.appImage ? "app" : "web")
+        viewMap[work.name] ?? work.defaultView ?? (work.appImage ? "app" : "web")
 </script>
 
 <style lang="scss" scoped>
@@ -276,6 +276,20 @@
                                             #3c3c3c,
                                             var(--base-background) 70%
                                         );
+
+                                        &.wide {
+                                            display: block;
+                                            padding: 0;
+                                            background: none;
+
+                                            .slide-image-app {
+                                                width: 100%;
+                                                aspect-ratio: auto;
+                                                border: 0;
+                                                border-radius: 0;
+                                                object-position: center;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -486,8 +500,17 @@
 
     @media (max-width: 768px) {
         .works .works-content .carousel .carousel-slide .slide-container {
+            // 세로로 쌓이는 폭에서는 선택된 카드가 따로 없으므로 모든 카드를 같은 모습으로 보여준다
+            cursor: default;
+
+            &,
             &.active {
                 transform: none;
+                border-color: var(--line);
+            }
+
+            .slide-media .media-stage {
+                opacity: 1;
             }
 
             // 웹/앱 카드 모두 같은 비율로 맞춰 카드 높이를 통일한다. 4:3이면 웹 화면은 좌우만 조금 잘리고, 폰 화면도 너무 작아지지 않는다
