@@ -146,6 +146,11 @@
                 padding-left: 28px;
                 border-left: 1px solid var(--line);
 
+                // 모바일은 글이 빽빽해 읽기 힘드므로 항목·성과 사이를 벌린다
+                @media (max-width: 768px) {
+                    gap: 28px;
+                }
+
                 .contents-desc-wrap {
                     display: flex;
                     position: relative;
@@ -216,6 +221,10 @@
                         display: flex;
                         flex-direction: column;
                         gap: 8px;
+
+                        @media (max-width: 768px) {
+                            gap: 12px;
+                        }
                     }
 
                     .contents-points {
@@ -226,6 +235,10 @@
                         padding: 0;
                         list-style: none;
 
+                        @media (max-width: 768px) {
+                            gap: 10px;
+                        }
+
                         li {
                             position: relative;
                             padding-left: 16px;
@@ -233,6 +246,11 @@
                             line-height: 160%;
                             word-break: keep-all;
                             color: var(--white);
+
+                            @media (max-width: 768px) {
+                                font-size: 14px;
+                                line-height: 175%;
+                            }
 
                             &::before {
                                 content: "›";
@@ -249,6 +267,10 @@
                         word-break: keep-all;
                         font-size: 15px;
                         font-weight: 600;
+
+                        @media (max-width: 768px) {
+                            line-height: 150%;
+                        }
                     }
                 }
             }

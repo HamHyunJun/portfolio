@@ -7,12 +7,36 @@ import type { MainWorkData } from "~/structure/user"
 // 회사 업무로 진행한 프로젝트. 공개해도 되는 범위만 적는다.
 export const companyWorks: MainWorkData[] = [
     {
+        name: "사운드 아카이브",
+        period: "2026. 02. ~ 2026. 07.",
+        summary:
+            "크리에이터가 영상에 쓸 음원을 찾고 내려받는 음원 아카이브 서비스의 웹 프론트엔드입니다. 새로 나온 음원과 숏폼·롱폼 전용 음원 목록을 장르·분위기·속도 필터로 탐색하고, 미리듣기·즐겨찾기·다운로드, 구독 플랜과 결제, 채널 등록 화면을 구현했습니다. 로그인·구독·채널 승인 여부는 라우트 미들웨어로 나눠 보호하고, 한국어·영어를 지원하며 PC와 모바일 화면을 각각 구성했습니다. 화면 이미지는 실제 앱 화면에 더미 데이터를 채워 캡처한 것입니다.",
+        stack: ["Nuxt 4", "Vue 3", "TypeScript", "Pinia", "SCSS", "Embla Carousel", "i18n"],
+        defaultView: "web",
+        webImage: "/works/music-archive.webp",
+        appImage: "/works/music-archive-app.webp",
+        appWide: true,
+        links: [],
+    },
+    {
         name: "고고고",
         period: "2025. 07. ~ 2026. 08.",
         summary:
             "쇼핑하고 별을 모아 룰렛으로 쿠폰을 받는 리워드 앱(iOS·Android)의 프론트엔드입니다. 별 적립 현황을 보여주는 홈 화면과 룰렛 돌리기, 출석체크·쿠폰함·친구초대 화면을 구현했습니다. 웹뷰 앱이라 앱 브릿지로 플랫폼과 안전 영역을 받아 화면에 반영하고, 인증 토큰은 쿠키와 메모리에 나눠 저장하며 만료 전에 자동으로 갱신하도록 했습니다.",
         stack: ["Nuxt 4", "Vue 3", "TypeScript", "Pinia", "SCSS", "Flutter WebView"],
         webImage: "/works/gogogo.webp",
+        links: [],
+    },
+    {
+        name: "커넥트 스튜디오",
+        period: "2024. 12. ~ 2025. 06.",
+        summary:
+            "광고주가 인플루언서 캠페인을 만들고 성과를 확인하는 광고주용 대시보드 웹입니다. 진행 중 캠페인과 일정 캘린더가 있는 홈, 카테고리별 캠페인 등록, 캠페인 관리·계약서 서명·정산 화면을 구현했습니다. 캠페인 성과는 핵심 지표와 성별·연령·국가별 시청자 분포를 ECharts 차트로 보여주고, 한국어·영어를 지원하며 PC와 모바일 화면을 각각 구성했습니다. 화면 이미지는 실제 앱 화면에 더미 데이터를 채워 캡처한 것입니다.",
+        stack: ["Nuxt 3", "Vue 3", "TypeScript", "Pinia", "SCSS", "ECharts", "V-Calendar", "i18n"],
+        defaultView: "web",
+        webImage: "/works/connect-studio.webp",
+        appImage: "/works/connect-studio-app.webp",
+        appWide: true,
         links: [],
     },
     {

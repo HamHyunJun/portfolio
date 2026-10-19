@@ -20,4 +20,12 @@
             padding: 20px 10px;
         }
     }
+
+    /* 768px 이하에서는 캐러셀이 꺼지고 세로로 쌓인다(UICarousel) */
+    @media (max-width: 768px) {
+        .embla__slide {
+            flex: 0 0 auto;
+            padding: 10px 4px;
+        }
+    }
 </style>

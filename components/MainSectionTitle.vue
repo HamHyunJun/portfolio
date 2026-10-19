@@ -35,6 +35,7 @@
             font-weight: 700;
             letter-spacing: -0.02em;
             flex-shrink: 0;
+            position: relative;
 
             // 깜빡이는 터미널 커서
             &::after {
@@ -44,8 +45,12 @@
             }
 
             .title-no {
-                display: block;
+                // 흐름에서 빼서 구분선이 제목 글자 줄 기준으로 가운데 정렬되게 함
+                position: absolute;
+                bottom: 100%;
+                left: 0;
                 margin-bottom: 6px;
+                white-space: nowrap;
                 font-family: var(--mono);
                 font-size: 13px;
                 font-weight: 400;

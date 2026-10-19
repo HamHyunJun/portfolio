@@ -31,6 +31,10 @@ export interface MainWorkData {
     aiTools?: string[]
     webImage?: string
     appImage?: string
+    // 지정하지 않으면 앱 화면이 있을 때 앱, 없으면 웹
+    defaultView?: "web" | "app"
+    // appImage가 폰 한 대가 아니라 여러 화면을 합성한 가로 이미지일 때 폰 프레임 없이 꽉 채운다
+    appWide?: boolean
     links: ContactLink[]
 }
 

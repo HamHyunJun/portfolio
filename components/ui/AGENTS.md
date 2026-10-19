@@ -9,7 +9,7 @@
 ## Key Files
 | File | Description |
 |------|-------------|
-| `UICarousel.vue` | Embla 래퍼(loop, center, autoplay 3초). `change(index)` emit, 언마운트 시 destroy |
+| `UICarousel.vue` | Embla 래퍼(loop, center, autoplay; 768px 이하는 캐러셀을 끄고 세로로 쌓음). `change(index)` emit, 언마운트 시 destroy |
 | `UICarouselSlide.vue` | 슬라이드 아이템(`flex: 0 0 80%`) |
 
 ## For AI Agents
