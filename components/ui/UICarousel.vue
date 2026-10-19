@@ -15,7 +15,14 @@
     }>()
 
     // 카드 클릭으로 해당 슬라이드로 넘기기 위해 노출한다
-    defineExpose({ scrollTo: (index: number): void => embla?.scrollTo(index) })
+    defineExpose({
+        scrollTo: (index: number): void => {
+            if (!window.matchMedia(STACK_QUERY).matches) embla?.scrollTo(index)
+        },
+    })
+
+    // 이 폭 이하에서는 캐러셀을 끄고 슬라이드를 세로로 쌓는다. 옆 카드가 보이지 않아 더 있다는 걸 알기 어렵기 때문이다
+    const STACK_QUERY = "(max-width: 768px)"
 
     const emblaRef = ref<HTMLElement>()
 
@@ -29,6 +36,7 @@
                 {
                     loop: true,
                     align: "center",
+                    breakpoints: { [STACK_QUERY]: { active: false } },
                 },
                 [
                     Autoplay({
@@ -61,6 +69,12 @@
             // 마우스 드래그로 넘길 때 글자가 선택되지 않도록 한다
             user-select: none;
             -webkit-user-select: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .embla .embla__container {
+            flex-direction: column;
         }
     }
 </style>
