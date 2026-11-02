@@ -29,7 +29,15 @@
                                     class="slide-media"
                                     :class="{ 'has-app': work.appImage }"
                                 >
-                                    <div class="media-stage">
+                                    <div
+                                        class="media-stage"
+                                        :class="{ zoomable: index === (selectedIndexes[group.key] ?? 0) }"
+                                        :role="index === (selectedIndexes[group.key] ?? 0) ? 'button' : undefined"
+                                        :tabindex="index === (selectedIndexes[group.key] ?? 0) ? 0 : undefined"
+                                        :aria-label="index === (selectedIndexes[group.key] ?? 0) ? `${work.name} 이미지 크게 보기` : undefined"
+                                        @click="onStageClick($event, group.key, index, work)"
+                                        @keydown.enter.prevent="openViewer(work, $event.currentTarget as HTMLElement)"
+                                    >
                                         <div class="media-layer" :class="{ show: viewOf(work) === 'web' }">
                                             <img
                                                 :src="work.webImage"
@@ -111,6 +119,24 @@
             </section>
         </div>
         <p v-else class="works-empty">프로젝트를 준비하고 있습니다.</p>
+        <dialog
+            ref="viewer"
+            class="viewer"
+            aria-label="이미지 크게 보기"
+            @click="closeViewer"
+            @cancel.prevent="closeViewer"
+        >
+            <img
+                v-if="viewerImage"
+                ref="viewerImg"
+                :src="viewerImage.src"
+                :alt="viewerImage.alt"
+                :width="viewerImage.width"
+                :height="viewerImage.height"
+                class="viewer-image"
+            />
+            <button type="button" class="viewer-close" aria-label="닫기" @click="closeViewer">×</button>
+        </dialog>
     </div>
 </template>
 
@@ -138,6 +164,14 @@
 
     const carousels: Record<string, Carousel | undefined> = {}
 
+    // 클릭한 이미지를 화면 전체에 띄우는 모달 다이얼로그(Esc·포커스 가둠은 브라우저 기본 동작)
+    const viewer = ref<HTMLDialogElement>()
+    const viewerImg = ref<HTMLImageElement>()
+    const viewerImage = ref<{ src: string; alt: string; width: number; height: number }>()
+    // 열고 닫을 때 썸네일 위치와 크기를 오가는 애니메이션의 기준이 되는 원본 이미지
+    let viewerOrigin: HTMLImageElement | undefined
+    let closing = false
+
     // 드래그로 넘기고 손을 뗀 자리의 카드가 클릭으로 처리돼 되돌아가지 않도록 누른 위치를 기억한다
     let downX = 0
 
@@ -148,6 +182,62 @@
         // 키보드로 누른 클릭(detail 0)은 좌표가 없어 드래그 판정에서 제외한다
         if (e.detail > 0 && Math.abs(e.clientX - downX) > 5) return
         if (index !== (selectedIndexes[key] ?? 0)) carousels[key]?.scrollTo(index)
+    }
+
+    // 가운데(선택된) 카드의 이미지만 확대한다. 옆 카드는 카드 클릭 동작(넘기기)이 처리한다
+    const onStageClick = (e: MouseEvent, key: string, index: number, work: MainWorkData): void => {
+        if (index !== (selectedIndexes[key] ?? 0)) return
+        if (e.detail > 0 && Math.abs(e.clientX - downX) > 5) return
+        openViewer(work, e.currentTarget as HTMLElement)
+    }
+
+    // 썸네일의 위치·크기에서 확대된 위치·크기로(또는 반대로) 움직이는 애니메이션을 만든다
+    const flip = (from: DOMRect, to: DOMRect, reverse: boolean): Promise<unknown> => {
+        const moved = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`
+        const frames = [{ transform: moved }, { transform: "none" }]
+        return viewerImg.value!.animate(reverse ? frames.reverse() : frames, {
+            duration: 320,
+            easing: "cubic-bezier(0.32, 0.72, 0, 1)",
+            fill: "both",
+        }).finished
+    }
+
+    const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    const openViewer = async (work: MainWorkData, stage: HTMLElement): Promise<void> => {
+        const isApp = viewOf(work) === "app"
+        const src = isApp ? work.appImage : work.webImage
+        const origin = stage.querySelector<HTMLImageElement>(".media-layer.show img")
+        if (!src || !origin || !origin.naturalWidth) return
+        // 화면(여백 24px 제외)에 비율을 유지한 채 가능한 한 크게 맞춘다
+        const fit = Math.min(
+            (innerWidth - 48) / origin.naturalWidth,
+            (innerHeight - 48) / origin.naturalHeight,
+        )
+        viewerOrigin = origin
+        closing = false
+        viewerImage.value = {
+            src,
+            alt: `${work.name} ${isApp ? "앱" : "웹"} 화면`,
+            width: Math.round(origin.naturalWidth * fit),
+            height: Math.round(origin.naturalHeight * fit),
+        }
+        await nextTick()
+        viewer.value?.showModal()
+        if (!reducedMotion() && viewerImg.value) {
+            await flip(origin.getBoundingClientRect(), viewerImg.value.getBoundingClientRect(), false)
+        }
+    }
+
+    const closeViewer = async (): Promise<void> => {
+        if (closing || !viewer.value?.open) return
+        closing = true
+        if (!reducedMotion() && viewerImg.value && viewerOrigin?.isConnected) {
+            await flip(viewerOrigin.getBoundingClientRect(), viewerImg.value.getBoundingClientRect(), true)
+        }
+        viewer.value?.close()
+        // 다음에 열 때 닫힌 상태(썸네일 크기)가 남아 깜빡이지 않도록 정리한다
+        viewerImg.value?.getAnimations().forEach((animation): void => animation.cancel())
     }
 
     const viewOf = (work: MainWorkData): MediaView =>
@@ -161,6 +251,71 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+
+        // 이미지 확대 보기: 배경(::backdrop)을 눌러도 닫힌다
+        .viewer {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            max-height: none;
+            margin: 0;
+            padding: 24px;
+            border: 0;
+            background: transparent;
+            align-items: center;
+            justify-content: center;
+
+            &[open] {
+                display: flex;
+            }
+
+            &::backdrop {
+                background: rgb(0 0 0 / 0%);
+                transition: background-color 0.32s ease;
+            }
+
+            &[open]::backdrop {
+                background: rgb(0 0 0 / 88%);
+
+                @starting-style {
+                    background: rgb(0 0 0 / 0%);
+                }
+            }
+
+            // 크기는 열 때 화면에 맞춰 계산한 width·height 속성을 따른다(애니메이션 기준 위치가 정확하도록)
+            .viewer-image {
+                flex-shrink: 0;
+                transform-origin: top left;
+                border-radius: 8px;
+                cursor: zoom-out;
+            }
+
+            .viewer-close {
+                position: absolute;
+                top: 16px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                border: 1px solid var(--line);
+                border-radius: 50%;
+                background: var(--gray);
+                color: var(--white);
+                font-size: 22px;
+                line-height: 1;
+                cursor: pointer;
+                transition:
+                    transform 0.2s ease,
+                    border-color 0.2s ease;
+
+                &:hover {
+                    border-color: var(--green);
+                }
+
+                &:active {
+                    transform: scale(0.92);
+                }
+            }
+        }
 
         .works-empty {
             padding: 60px 0;
@@ -246,9 +401,17 @@
                             .media-stage {
                                 position: relative;
                                 aspect-ratio: 16 / 9;
+                                // 큰 모니터에서 이미지가 화면을 채워 설명이 잘리지 않도록 높이를 제한한다
+                                max-height: min(38vh, 360px);
+                                // 위쪽 테두리와 이미지의 어두운 배경이 붙어 보이지 않도록 여백을 둔다
+                                margin: 12px auto 0;
                                 overflow: hidden;
                                 opacity: 0.5;
                                 transition: opacity 0.4s ease;
+
+                                &.zoomable {
+                                    cursor: zoom-in;
+                                }
                                 background: var(--base-background);
 
                                 .media-layer {
@@ -314,7 +477,7 @@
 
                             .media-tabs {
                                 position: absolute;
-                                top: 12px;
+                                top: 24px;
                                 right: 12px;
                                 display: flex;
                                 gap: 2px;
