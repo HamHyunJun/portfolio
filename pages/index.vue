@@ -309,7 +309,7 @@
                 date: "2024. 04. ~",
                 detail: "크리에이블 개발팀 근무중",
                 points: [
-                    "자사 주요 서비스(짤스튜디오, 고고고, 사운드 아카이브) 프론트엔드 개발",
+                    "자사 주요 서비스 짤스튜디오, 고고고, 에스크, 사운드 아카이브 프론트엔드 개발",
                     "신규 사용자 유입을 위한 고전환 랜딩 페이지 및 프로모션 이벤트 페이지 구현",
                     "레거시 UI 리뉴얼과 컴포넌트 리팩토링을 진행해 코드 재사용성 및 렌더링 성능 최적화",
                 ],
@@ -324,7 +324,7 @@
                 {
                     name: "TypeScript",
                     desc:
-                        "자바스크립트에 \"이 값은 숫자, 이 값은 이런 모양의 객체\"라는 타입을 미리 적어, 코드를 실행하기 전에 실수를 잡는 언어입니다. ClaudeBoard에서는 서버와 화면이 주고받는 메시지(세션 상태 5종, 요청·응답 종류 등)를 하나의 공용 타입 파일로 정의해 양쪽이 같은 규칙을 쓰게 했고, 한쪽만 고쳐서 생기는 불일치를 빌드 단계에서 막았습니다. .vue 파일까지 vue-tsc로 타입 검사했습니다.",
+                        "서버와 화면이 주고받는 메시지 타입을 공용 파일 하나에 몰아두고 양쪽이 같이 가져다 써서, 한쪽만 고치면 빌드에서 바로 에러가 나게 했습니다. .vue 파일까지 vue-tsc로 검사했고, any는 쓰지 않고 interface 위주로 모델을 정의했습니다.",
                     logoText: "TS",
                     logoColor: "#002AB5",
                     logoBackground: "#97ABEF",
@@ -332,7 +332,7 @@
                 {
                     name: "JavaScript",
                     desc:
-                        "브라우저에서 실행되는 로직을 직접 작성했습니다. TaxKit은 업로드한 엑셀을 서버로 보내지 않고 브라우저 안에서 읽고 계산해 통장 거래와 세금계산서를 대조하고, 이 포트폴리오는 별도 라이브러리 없이 IntersectionObserver(화면에 보이는 구간 감지)와 ResizeObserver(크기 변화 감지) 같은 브라우저 내장 기능으로 스크롤 연동 메뉴와 줄 번호를 구현했습니다.",
+                        "엑셀 파싱이나 점수 계산처럼 브라우저에서 끝낼 수 있는 건 서버 없이 클라이언트에서 처리했습니다. 스크롤 연동 메뉴나 크기 변화 감지는 라이브러리 없이 IntersectionObserver, ResizeObserver로 짰고, 검색 입력에는 debounce를 걸었습니다.",
                     logoText: "JS",
                     logoColor: "#4A3F00",
                     logoBackground: "#C5AD1C",
@@ -340,7 +340,7 @@
                 {
                     name: "HTML5",
                     desc:
-                        "div만 쓰지 않고 nav, main, section, article 같은 의미 있는 태그로 문서 구조를 잡아, 스크린 리더(화면을 음성으로 읽어 주는 프로그램)와 검색 엔진이 구조를 이해하게 했습니다. 펼침 버튼에는 aria-expanded, 선택 버튼에는 aria-pressed를 달아 상태를 음성으로도 알리고, 마우스 없이 Tab 키만으로 모든 기능을 쓸 수 있게 했습니다.",
+                        "div 남발하지 않고 nav, main, section, article 위주로 구조를 잡았습니다. 펼침 버튼엔 aria-expanded, 선택 버튼엔 aria-pressed를 달았고, 마우스 없이 Tab만으로 다 누를 수 있는지는 직접 눌러보면서 확인했습니다.",
                     logoText: "HT",
                     logoColor: "#850000",
                     logoBackground: "#F39393",
@@ -348,7 +348,7 @@
                 {
                     name: "CSS3",
                     desc:
-                        "화면 폭에 따라 배치가 바뀌는 반응형 레이아웃을 Grid, Flexbox, 미디어 쿼리로 만들었습니다. 색과 간격은 CSS 변수로 한곳에 모아 테마를 한 번에 바꿀 수 있게 했고, 이 포트폴리오의 타이핑·글자 등장 효과는 자바스크립트 없이 CSS 애니메이션만으로 구현했습니다. 움직임을 줄여 달라는 사용자 설정(prefers-reduced-motion)이 켜져 있으면 애니메이션을 끕니다.",
+                        "반응형은 Grid, Flexbox, 미디어 쿼리로 잡고 색이랑 간격은 CSS 변수로 모아서 한 번에 바꿀 수 있게 했습니다. 타이핑이나 글자 등장 같은 효과는 JS 없이 CSS 애니메이션으로 하고, prefers-reduced-motion이 켜져 있으면 꺼지게 했습니다.",
                     logoText: "CS",
                     logoColor: "#002AB5",
                     logoBackground: "#97ABEF",
@@ -361,7 +361,7 @@
                 {
                     name: "Vue.js",
                     desc:
-                        "Composition API(<script setup>)로 화면 로직을 composable이라는 함수 단위로 나눠 작성했습니다. 예를 들어 TaxKit은 엑셀 읽기, 거래 대사, 위험 거래 탐지, 독촉 문구 생성을 각각 별도 파일로 분리해 화면 컴포넌트는 보여 주는 일만 하고, 계산 로직은 따로 테스트할 수 있게 했습니다.",
+                        "script setup으로 쓰고 로직은 composable로 빼서 작성했습니다. 데이터 읽기, 계산, 규칙 판정을 각각 파일로 나눠서 컴포넌트는 화면만 그리고, 계산 쪽은 따로 테스트할 수 있게 했습니다. 긴 목록은 가상 스크롤로 그렸습니다.",
                     logoText: "VU",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
@@ -369,7 +369,7 @@
                 {
                     name: "Nuxt.js",
                     desc:
-                        "Vue 기반 프레임워크로, 폴더 구조가 곧 페이지 주소가 됩니다. 서버 렌더링(서버가 완성된 HTML을 미리 만들어 보내는 방식)을 쓴 MoaCook과 이 포트폴리오는 첫 화면이 빠르고 검색 엔진도 내용을 읽을 수 있으며, 앱으로 포장하거나 정적 배포하는 ClaudeBoard, TaxKit, Camping&Joy는 브라우저에서만 도는 SPA로 구성했습니다. MoaCook에서는 Nuxt 서버 API로 레시피 등록, 검색, 이미지 업로드를 직접 만들었습니다.",
+                        "첫 화면이 중요한 서비스는 SSR, 앱으로 포장하거나 정적 배포하는 쪽은 SPA로 나눠 설정했습니다. 라우트 미들웨어로 로그인, 구독 여부에 따라 접근을 막았고, Nitro 서버 API로 등록, 검색, 이미지 업로드를 직접 만들었습니다. 자주 부르는 응답은 useState로 캐시했습니다.",
                     logoText: "NX",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
@@ -377,7 +377,7 @@
                 {
                     name: "Pinia",
                     desc:
-                        "여러 화면이 함께 쓰는 데이터를 한곳(스토어)에서 관리하는 Vue의 상태 관리 도구입니다. Camping&Joy에서 캠핑 일정(camp)과 장비 목록(gear) 스토어를 나눠 모든 화면이 같은 데이터를 보게 했고, persistedstate 플러그인으로 새로고침하거나 앱을 껐다 켜도 입력한 내용이 남도록 했습니다.",
+                        "여러 화면이 같이 쓰는 데이터는 스토어로 나눠서 모든 화면이 같은 값을 보게 했습니다. persistedstate를 붙여서 새로고침하거나 앱을 껐다 켜도 입력한 게 남게 했고, 서버와 맞추는 건 스토어 변경을 지켜보다 바뀐 것만 올리는 방식으로 처리했습니다.",
                     logoText: "PI",
                     logoColor: "#4A3F00",
                     logoBackground: "#C5AD1C",
@@ -385,7 +385,7 @@
                 {
                     name: "Tailwind CSS",
                     desc:
-                        "HTML 클래스에 flex, p-4, text-sm 같은 짧은 유틸리티 클래스를 조합해 스타일을 지정하는 방식입니다. CSS 파일을 오가지 않고 마크업 안에서 간격, 색, 반응형(md: 등)을 바로 정할 수 있어, 반복되는 화면을 빠르게 구현했습니다.",
+                        "간격, 색, 반응형(md: 같은 것)을 마크업에서 바로 정해서 반복되는 화면을 빠르게 만들 때 썼습니다. 색은 테마 값을 CSS 변수로 받아 쓰게 해서 나중에 바꿔도 클래스는 안 건드립니다.",
                     logoText: "TW",
                     logoColor: "#073B8B",
                     logoBackground: "#94AFD9",
@@ -393,7 +393,7 @@
                 {
                     name: "SCSS",
                     desc:
-                        "CSS에 중첩, 변수, 믹스인(재사용하는 스타일 묶음)을 더한 문법입니다. 컴포넌트마다 scoped로 스타일 범위를 가둬 다른 화면에 영향이 번지지 않게 했고, TaxKit, ClaudeBoard, Camping&Joy에서 공통 스타일을 믹스인으로 묶어 재사용했습니다.",
+                        "scoped로 컴포넌트 범위 안에서만 스타일이 먹게 하고 중첩이랑 변수를 기본으로 썼습니다. 반복되는 스타일은 믹스인으로 빼고, 디자인 토큰은 변수로 모아서 화면마다 값이 어긋나지 않게 했습니다.",
                     logoText: "SC",
                     logoColor: "#850000",
                     logoBackground: "#F39393",
@@ -401,7 +401,7 @@
                 {
                     name: "Supabase",
                     desc:
-                        "서버를 직접 만들지 않고 Supabase(PostgreSQL 데이터베이스와 파일 저장소)를 백엔드로 썼습니다. Camping&Joy는 DB 구조 변경 이력을 남기는 마이그레이션 SQL 3개와 행 단위 접근 규칙(RLS)을 작성해 공유 캠핑 일정을 저장했고, MoaCook은 서버 API에서 서비스 키로 접속해 레시피 데이터와 이미지(저장소 버킷)를 관리했습니다.",
+                        "마이그레이션 SQL로 DB 구조 변경 이력을 남기고 RLS(행 단위 접근 규칙)로 모임 단위 접근을 막았습니다. 변경은 Realtime 알림으로 받고, 서버 API에서는 서비스 키로 붙어 데이터와 이미지 버킷을 관리했습니다. 키는 서버 환경변수에만 두었습니다.",
                     logoText: "SB",
                     logoColor: "#1D4900",
                     logoBackground: "#69C32D",
@@ -409,7 +409,7 @@
                 {
                     name: "Capacitor",
                     desc:
-                        "웹으로 만든 서비스를 거의 그대로 Android·iOS 앱으로 포장하는 도구입니다. Camping&Joy는 인터넷이 약한 캠핑장에서도 열리도록 정적 파일을 앱 안에 넣고, 파일 저장·공유 플러그인으로 결과 이미지를 기기에 저장하고 공유하게 했습니다. MoaCook은 Android APK와 iOS PWA(홈 화면에 추가해 쓰는 웹앱)로 제공합니다.",
+                        "웹으로 만든 걸 Android, iOS 앱으로 포장했습니다. 인터넷이 약한 곳에서도 열리도록 정적 파일을 앱 안에 넣고, 파일 저장·공유 플러그인으로 결과 이미지를 기기에 저장하게 했습니다. 빌드는 GitHub Actions로 돌렸습니다.",
                     logoText: "CP",
                     logoColor: "#073B8B",
                     logoBackground: "#94AFD9",
@@ -417,10 +417,58 @@
                 {
                     name: "ECharts",
                     desc:
-                        "데이터를 막대, 선, 원형 같은 차트로 그려 주는 시각화 라이브러리입니다. 숫자만 나열하면 비교하기 어려운 데이터를 차트와 대시보드로 보여 줘서, 변화와 이상 구간을 한눈에 파악하게 했습니다.",
+                        "막대, 선, 원형 차트로 지표 추이와 분포를 그렸습니다. 날짜 범위 바꾸면 차트가 같이 갱신되게 했고, 툴팁 날짜나 계열 순서처럼 읽는 데 걸리는 부분을 따로 손봤습니다.",
                     logoText: "EC",
                     logoColor: "#7F0048",
                     logoBackground: "#F28DC6",
+                },
+                {
+                    name: "i18n (Nuxt i18n)",
+                    desc:
+                        "vue-i18n 기반 @nuxtjs/i18n으로 한국어, 영어(일본어, 중국어 포함) 다국어를 처리했습니다. 번역 키는 PascalCase로 규칙을 통일하고 빠진 키는 확인해서 채웠으며, 메시지는 필요한 언어만 lazy 로드해 번들을 줄였습니다. 언어를 바꾸면 API 요청 헤더의 언어 값도 같이 바뀌게 했습니다.",
+                    logoText: "IN",
+                    logoColor: "#1D4900",
+                    logoBackground: "#69C32D",
+                },
+                {
+                    name: "React",
+                    desc:
+                        "합성 컴포넌트(Root와 하위 파트), 제어·비제어 상태, forwardRef, asChild 패턴으로 헤드리스 컴포넌트를 만들었습니다. 스타일은 data-* 속성으로만 열어 두고 동작과 접근성만 담당하게 나눴습니다.",
+                    logoText: "RE",
+                    logoColor: "#073B8B",
+                    logoBackground: "#94AFD9",
+                },
+                {
+                    name: "Node.js / Fastify",
+                    desc:
+                        "Fastify로 REST와 WebSocket 서버를 만들고 node-pty로 터미널 프로세스를 띄워 출력을 브라우저로 중계했습니다. 서버와 화면이 주고받는 메시지 타입은 공용 패키지로 맞췄습니다.",
+                    logoText: "ND",
+                    logoColor: "#1D4900",
+                    logoBackground: "#69C32D",
+                },
+                {
+                    name: "WebSocket / Socket.IO",
+                    desc:
+                        "채팅과 실시간 관제 화면처럼 서버가 먼저 보내야 하는 데이터에 썼습니다. 연결은 앱 초기화가 끝난 뒤에 맺고, 출력이 몰릴 땐 일정 간격으로 묶어 보내 화면 갱신을 줄였습니다. 재접속하면 놓친 내용을 다시 받아 채웁니다.",
+                    logoText: "WS",
+                    logoColor: "#4A3F00",
+                    logoBackground: "#C5AD1C",
+                },
+                {
+                    name: "Three.js",
+                    desc:
+                        "복셀 3D 오피스를 그렸습니다. 프로젝트 수에 맞춰 책상과 건물이 자동으로 늘어나고, 마우스 드래그로 탑뷰와 사이드 뷰, 회전, 줌을 오가게 했습니다. 캐릭터 상태(작업 중, 이슈, 완료)는 애니메이션과 아이콘으로 나눠 보여 줍니다.",
+                    logoText: "3D",
+                    logoColor: "#7F0048",
+                    logoBackground: "#F28DC6",
+                },
+                {
+                    name: "Vitest / Playwright",
+                    desc:
+                        "순수 함수로 뺀 로직은 Vitest나 node --test로 검증하고, 컴포넌트는 Testing Library와 vitest-axe로 접근성까지 검사했습니다. 실제 동작은 Playwright로 Chromium에서 클릭, 키보드를 돌려 확인했고, 외부 요청 0건과 콘솔 에러 0건을 기준으로 삼았습니다.",
+                    logoText: "TE",
+                    logoColor: "#850000",
+                    logoBackground: "#F39393",
                 },
             ],
         },
@@ -430,7 +478,7 @@
                 {
                     name: "GitHub",
                     desc:
-                        "Git으로 변경 이력을 남기고 GitHub으로 협업했습니다. 이 포트폴리오처럼 dev 브랜치에서 작업한 뒤 검증하고 master에 병합하는 브랜치 전략으로 운영해, 작업 중인 코드가 운영 코드를 건드리지 않게 했습니다. 커밋 메시지에는 무엇을 왜 바꿨는지 한국어로 적었습니다.",
+                        "회사 컨벤션대로 커밋 메시지에 feat, fix, refactor, chore, docs, ci 접두사를 붙이고 한 커밋에 한 가지 변경만 담았습니다. feature 브랜치에서 작업해 PR로 dev, staging을 거쳐 main에 반영하는 흐름을 따랐고, 버전은 커밋 접두사에 따라 자동으로 올라가게 해둔 규칙에 맞췄습니다.",
                     logoText: "GH",
                     logoColor: "#663005",
                     logoBackground: "#D2A480",
@@ -438,7 +486,7 @@
                 {
                     name: "Figma",
                     desc:
-                        "디자이너가 전달한 Figma 시안에서 간격, 색, 글자 크기, 컴포넌트 구조를 직접 확인해 시안과 같은 화면을 구현했습니다.",
+                        "시안에서 간격, 색, 글자 크기, 컴포넌트 구조를 직접 재서 똑같이 맞췄습니다. 반복되는 요소는 컴포넌트로 묶고 디자인 토큰 값은 변수로 옮겨 시안과 코드가 어긋나지 않게 했습니다.",
                     logoText: "FG",
                     logoColor: "#730673",
                     logoBackground: "#DB96DB",
@@ -446,7 +494,7 @@
                 {
                     name: "Claude Code (LLM)",
                     desc:
-                        "Claude Code(터미널에서 쓰는 AI 코딩 도구)를 개발 전반에 활용했습니다. 프로젝트마다 CLAUDE.md에 코딩·언어 규칙을 적어 AI가 일관되게 작업하게 했고, oh-my-claudecode, ponytail, frontend-design 같은 스킬과 플러그인을 상황에 맞게 골라 썼습니다. 또 AI가 브라우저의 깨진 레이아웃을 직접 측정하도록 MCP(AI에 외부 도구를 연결하는 표준 규격) 서버 Inspector-Agent를 만들었습니다.",
+                        "개발할 때 거의 항상 켜놓고 썼습니다. CLAUDE.md에 코딩 규칙이랑 언어 규칙을 적어놔서 결과물이 들쭉날쭉하지 않게 했고, oh-my-claudecode, ponytail, frontend-design 같은 스킬은 작업 보고 골라 썼습니다. 깨진 레이아웃을 AI가 직접 재게 하려고 MCP 서버(Inspector-Agent)도 따로 만들었습니다.",
                     logoText: "AI",
                     logoColor: "#730673",
                     logoBackground: "#DB96DB",
@@ -454,7 +502,7 @@
                 {
                     name: "Vercel",
                     desc:
-                        "GitHub에 코드를 올리면 자동으로 빌드하고 배포해 주는 호스팅 서비스입니다. TaxKit, Camping&Joy, MoaCook을 Vercel로 배포해 서비스 주소를 운영했고, MoaCook은 서버 함수 지역을 서울(icn1)로 지정해 DB와 사용자 모두에게 가깝게 했습니다. 프리뷰 배포와 운영 배포를 나눠 관리했습니다.",
+                        "GitHub에 올리면 자동으로 빌드·배포되게 연결하고 프리뷰 배포와 운영 배포를 나눠 썼습니다. 서버 함수 지역을 서울(icn1)로 지정해 DB와 사용자 모두에게 가깝게 했고, vercel.json에 CSP 같은 보안 헤더를 붙였습니다.",
                     logoText: "VC",
                     logoColor: "#663005",
                     logoBackground: "#D2A480",
@@ -462,10 +510,26 @@
                 {
                     name: "Vite",
                     desc:
-                        "빠른 개발 서버이자 번들러(여러 파일을 하나로 묶는 도구)입니다. Inspector-Agent에서는 Vite 플러그인을 직접 만들어, 빌드할 때 .vue 파일을 분석(@vue/compiler-sfc, @babel/parser)하고 각 화면 요소에 data-ia-src라는 속성으로 \"몇 번째 파일 몇 번째 줄\" 위치를 심었습니다. 그래서 브라우저에서 깨진 요소를 찾으면 소스 위치로 바로 연결됩니다.",
+                        "빌드 때 돌아가는 플러그인을 직접 만들었습니다. .vue 파일을 분석해서(@vue/compiler-sfc, @babel/parser) 요소마다 data-ia-src로 몇 번째 파일 몇 번째 줄인지 심어놔서, 깨진 요소를 찾으면 소스 위치로 바로 이어집니다.",
                     logoText: "VI",
                     logoColor: "#0121C2",
                     logoBackground: "#9FABE3",
+                },
+                {
+                    name: "WebView 앱 브릿지",
+                    desc:
+                        "Flutter WebView 안에서 웹이 네이티브 기능을 쓰도록 브릿지를 연동했습니다. 안전 영역, 스낵바, 갤러리, 공유, 영상 압축, 상태바 탭 같은 호출을 만들고 이벤트 타입을 구체화했습니다. 앱 버전에 따라 지원하지 않는 호출은 분기했고, 웹에서도 같은 화면이 돌도록 대체 동작을 두었습니다.",
+                    logoText: "WB",
+                    logoColor: "#730673",
+                    logoBackground: "#DB96DB",
+                },
+                {
+                    name: "이벤트 로깅",
+                    desc:
+                        "GA(gtag), Meta Pixel, adbrix, Clarity로 페이지와 버튼 이벤트를 쌓았습니다. 로그인 전 사용자 이벤트와 누락된 이벤트를 따로 확인해 채웠고, 룰렛 같은 핵심 동선은 네이티브 이벤트로도 보냈습니다.",
+                    logoText: "LG",
+                    logoColor: "#663005",
+                    logoBackground: "#D2A480",
                 },
             ],
         },
