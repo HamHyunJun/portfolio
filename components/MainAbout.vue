@@ -142,7 +142,7 @@
                 }
                 display: flex;
                 flex-direction: column;
-                gap: 14px;
+                gap: 24px;
                 padding-left: 28px;
                 border-left: 1px solid var(--line);
 
