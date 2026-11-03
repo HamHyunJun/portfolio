@@ -4,6 +4,9 @@
         <header class="print-head" aria-hidden="true">
             <p class="print-name">HAM HYUN JUN</p>
             <p class="print-role">Front-End Developer</p>
+            <p class="print-url">
+                <a :href="siteUrl" tabindex="-1">{{ siteUrl }}</a>
+            </p>
         </header>
         <section class="section main-board" @pointermove="onBoardMove">
             <div class="board-glow" aria-hidden="true"></div>
